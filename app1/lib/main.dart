@@ -17,7 +17,7 @@ class Myapp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const Loging(),
-        '/singup': (context) => const Singupage()
+        '/singup': (context) => Singupage()
       },
     );
   }
