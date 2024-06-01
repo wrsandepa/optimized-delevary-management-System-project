@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "433967579812",
+    "project_id": "delevery-mangement-system",
+    "storage_bucket": "delevery-mangement-system.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433967579812:android:44229e033b64c2a899dc31",
+        "android_client_info": {
+          "package_name": "com.example.app1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcarz-F2x343DnkNOsamUU0tdrHm2nSfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
