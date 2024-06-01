@@ -6,16 +6,15 @@ class Singupage extends StatelessWidget {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _name = TextEditingController();
   final TextEditingController _email = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawerEnableOpenDragGesture: false,
       appBar: AppBar(
-        title: const Text(
-          'hello',
-        ),
-        backgroundColor: Colors.blue,
-      ),
+          title: const Text(
+            'hello',
+          ),
+          backgroundColor: Colors.orange),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -98,11 +97,7 @@ class Singupage extends StatelessWidget {
             height: 50,
           ),
           ElevatedButton(
-            onPressed: () {
-              String username = _username.text;
-              String name = _name.text;
-              String password = _password.text;
-              String email = _email.text;
+            onPressed: () async {
               Navigator.pushNamed(context, '/login'); //navigater mark left top
             },
             child: const Text(
