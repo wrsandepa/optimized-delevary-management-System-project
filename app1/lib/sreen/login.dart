@@ -1,7 +1,38 @@
+import 'package:app1/sreen/home.dart';
+import 'package:app1/sreen/singup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Loging extends StatelessWidget {
+class Loging extends StatefulWidget {
   const Loging({super.key});
+
+  @override
+  State<Loging> createState() => _LogingState();
+}
+
+class _LogingState extends State<Loging> {
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+
+  //login fucltion
+  Future<User?> Singin() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      UserCredential us_cred = await auth.signInWithEmailAndPassword(
+          email: _email.text, password: _password.text);
+      user = us_cred.user;
+      if (user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Homescreen()),
+        );
+      }
+    } catch (e) {
+      print("error!!!");
+    }
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +45,7 @@ class Loging extends StatelessWidget {
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/singup');
+              Singin();
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 199, 208, 214)),
@@ -42,22 +73,24 @@ class Loging extends StatelessWidget {
           SizedBox(
             width: 400,
             child: TextFormField(
+              controller: _email,
               decoration: InputDecoration(
                   label: const Text(
-                    'Username',
+                    'email',
                     style: TextStyle(
                       color: Colors.blue,
                     ),
                   ),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25))),
-              obscureText: true, // This will obscure the text with star marks
+              obscureText: false, // This will obscure the text with star marks
             ),
           ),
           const SizedBox(height: 20),
           SizedBox(
             width: 400,
             child: TextFormField(
+              controller: _password,
               decoration: InputDecoration(
                   label: const Text(
                     'Password',
@@ -73,7 +106,10 @@ class Loging extends StatelessWidget {
           const SizedBox(height: 50),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/singup');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Singupage()),
+              );
             },
             child: const Text(
               'already haven`t account',

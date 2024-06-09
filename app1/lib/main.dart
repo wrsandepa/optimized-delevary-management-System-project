@@ -1,9 +1,16 @@
-import 'package:app1/singup.dart';
+import 'package:app1/sreen/login.dart';
+
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import 'login.dart';
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyDcarz-F2x343DnkNOsamUU0tdrHm2nSfo",
+          appId: "1:433967579812:android:44229e033b64c2a899dc31",
+          messagingSenderId: "433967579812",
+          projectId: "delevery-mangement-system"));
   runApp(const Myapp());
 }
 
@@ -12,13 +19,9 @@ class Myapp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
-      routes: {
-        '/login': (context) => const Loging(),
-        '/singup': (context) => Singupage()
-      },
+      home: Loging(),
     );
   }
 }
