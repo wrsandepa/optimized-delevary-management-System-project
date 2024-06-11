@@ -1,4 +1,7 @@
+import 'package:app1/sreen/home.dart';
 import 'package:app1/sreen/login.dart';
+import 'package:app1/sreen/singup.dart';
+import 'package:app1/sreen/tracking.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +24,7 @@ class Myapp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Loging(),
+      home: Singupage(),
     );
   }
 }
