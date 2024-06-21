@@ -46,7 +46,7 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-            'hello ',
+            'hello',
           ),
           backgroundColor: Colors.orange),
       body: Padding(
@@ -99,10 +99,20 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
               afterLineStyle: const LineStyle(color: Colors.blueAccent),
             ),
           ] else
-            Container(
-                height: 100,
-                width: 100,
-                child: Lottie.asset('assets/Animation - 1718942920802.json'))
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Container(
+                width: 500,
+                height: 50,
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.red,
+                ),
+              ),
+            ),
+          Container(
+              width: 300,
+              height: 300,
+              child: LottieBuilder.network('assets1/annimation/raking.json'))
         ]),
       ),
     );
