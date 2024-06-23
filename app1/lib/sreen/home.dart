@@ -1,3 +1,5 @@
+import 'package:app1/service/display_efficiancy_curior.dart';
+import 'package:app1/sreen/tracking.dart';
 import 'package:flutter/material.dart';
 
 class Homescreen extends StatefulWidget {
@@ -25,7 +27,13 @@ class _HomescreenState extends State<Homescreen> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () => {print("hii")},
+                onTap: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Trackingmyparcel()),
+                  )
+                },
                 child: Container(
                   width: double.infinity,
                   height: 100,
@@ -47,20 +55,28 @@ class _HomescreenState extends State<Homescreen> {
               const SizedBox(
                 height: 60,
               ),
-              Container(
-                width: double.infinity,
-                height: 100.0,
-                decoration: BoxDecoration(
-                    color: Colors
-                        .blue, // Setting the background color using decoration
-                    borderRadius: BorderRadius.circular(20.0)),
-                child: const Center(
-                  child: Text(
-                    "ADD PARCEL",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Colors.black),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Display_curior_ser()));
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                      color: Colors
+                          .blue, // Setting the background color using decoration
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: const Center(
+                    child: Text(
+                      "ADD PARCEL",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Colors.black),
+                    ),
                   ),
                 ),
               ),
