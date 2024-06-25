@@ -63,16 +63,42 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
         child: Form(
           key: _formKey1,
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            TextFormField(
-              controller: _traking_num,
-              decoration: InputDecoration(
-                  hintText: "enter your tracking number",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20))),
-              validator: (value) => value == null || value.trim().isEmpty
-                  ? 'Your Tracking number is invalied '
-                  : null,
-            ),
+            Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 255, 191, 0),
+                      Colors.amberAccent,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: const Offset(6, 6),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                    ),
+                    BoxShadow(
+                      color: Colors.white.withOpacity(0.8),
+                      offset: const Offset(-6, -6),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: _traking_num,
+                  decoration: InputDecoration(
+                      hintText: "enter your tracking number",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Your Tracking number is invalied '
+                      : null,
+                )),
             ElevatedButton(
                 onPressed: () async {
                   String parcelId = _traking_num.text.trim();

@@ -38,8 +38,14 @@ class _HomescreenState extends State<Homescreen> {
                   width: double.infinity,
                   height: 100,
                   decoration: BoxDecoration(
-                      color: Colors
-                          .blue, // Setting the background color using decoration
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 255, 191, 0),
+                          Colors.amberAccent
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ), // Setting the background color using decoration
                       borderRadius: BorderRadius.circular(20.0)),
                   child: const Center(
                     child: Text(
@@ -66,8 +72,14 @@ class _HomescreenState extends State<Homescreen> {
                   width: double.infinity,
                   height: 100.0,
                   decoration: BoxDecoration(
-                      color: Colors
-                          .blue, // Setting the background color using decoration
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 255, 191, 0),
+                          Colors.amberAccent
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ), // Setting the background color using decoration
                       borderRadius: BorderRadius.circular(20.0)),
                   child: const Center(
                     child: Text(
@@ -87,8 +99,14 @@ class _HomescreenState extends State<Homescreen> {
                 width: 10000,
                 height: 200.0,
                 decoration: BoxDecoration(
-                    color: Colors
-                        .blue, // Setting the background color using decoration
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 255, 191, 0),
+                        Colors.amberAccent
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ), // Setting the background color using decoration
                     borderRadius: BorderRadius.circular(20.0)),
                 child: const Center(
                   child: Center(
