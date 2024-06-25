@@ -128,7 +128,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                         getEfficientCourierServices(home_town.text);
                   });
                 }
-                if (home_town.text.isEmpty) {
+                if (home_town.text.isEmpty || home_town.text.trim().isEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     showDialog(
                       context: context,
@@ -177,7 +177,6 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                     ;
                     List<Map<String, dynamic>> courierServices =
                         snapshot.data ?? [];
-                    courierServices1 = snapshot.data ?? [];
 
                     return ListView.builder(
                       itemCount: courierServices.length,
@@ -186,6 +185,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                             courierServices[index];
                         return InkWell(
                           onTap: () {
+                            courierServices1 = snapshot.data ?? [];
                             showDialog(
                               context: context,
                               builder: (context) {
