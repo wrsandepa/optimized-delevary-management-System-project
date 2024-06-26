@@ -95,7 +95,9 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                       hintText: "enter your tracking number",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20))),
-                  validator: (value) => value == null || value.trim().isEmpty
+                  validator: (value) => value == null ||
+                          value.trim().isEmpty ||
+                          getHistoryLength(_traking_num.text.trim()) == null
                       ? 'Your Tracking number is invalied '
                       : null,
                 )),

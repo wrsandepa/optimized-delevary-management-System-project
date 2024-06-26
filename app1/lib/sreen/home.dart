@@ -13,12 +13,49 @@ class Homescreen extends StatefulWidget {
 final TextEditingController _confirmok = TextEditingController();
 
 class _HomescreenState extends State<Homescreen> {
+  // the function use in hear snackbar is must define under scaffold
+  Future<void> updateParcelConfirmation(String parcelId) async {
+    try {
+      // Get reference to the parcel document
+      DocumentReference parcelRef =
+          FirebaseFirestore.instance.collection('parcels').doc(parcelId);
+      // Check if the document exists
+      DocumentSnapshot snapshot = await parcelRef.get();
+      if (snapshot.exists) {
+        // Update the confirmation field to 'delivered'
+        await parcelRef.update({
+          'confirmation': 'delivered',
+          'confirmationTime': FieldValue.serverTimestamp()
+        });
+        // Show success snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Parcel marked as delivered.'),
+            duration: Duration(seconds: 3), // Adjust the duration as needed
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Failed to update parcel confirmation.'),
+            duration: Duration(seconds: 5),
+            backgroundColor: Colors.red,
+          ),
+        );
+        print('error!!!!!!!!!!!!');
+      }
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-            'hello',
+            'hellod',
           ),
           backgroundColor: Colors.orange),
       bottomNavigationBar: const BottomAppBar(
@@ -112,7 +149,8 @@ class _HomescreenState extends State<Homescreen> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              updateParcelConfirmation(_confirmok.text);
+                              updateParcelConfirmation(_confirmok.text.trim());
+
                               Navigator.of(context).pop();
                             },
                             child: const Text(
@@ -164,20 +202,5 @@ class _HomescreenState extends State<Homescreen> {
         ),
       ),
     );
-  }
-}
-
-Future<void> updateParcelConfirmation(String parcelId) async {
-  try {
-    // Get reference to the parcel document
-    DocumentReference parcelRef =
-        FirebaseFirestore.instance.collection('parcels').doc(parcelId);
-
-    // Update the confirmation field to 'delivered'
-    await parcelRef.update({'confirmation': 'delivered'});
-
-    print('Parcel $parcelId marked as delivered.');
-  } catch (e) {
-    print('Error updating parcel confirmation: $e');
   }
 }
