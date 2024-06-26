@@ -5,6 +5,7 @@ import 'package:app1/sreen/dashboard.dart';
 import 'package:app1/sreen/tracking.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Display_curior_ser extends StatefulWidget {
   const Display_curior_ser({super.key});
@@ -190,10 +191,9 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.red,
-                                    size: 100,
+                                  title: const Text(
+                                    'Thank you choosing us!',
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                   backgroundColor: Colors.amber,
                                   content: Column(
@@ -288,6 +288,14 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                   },
                 ),
               ),
+            Padding(
+              padding: EdgeInsets.all(80),
+              child: Container(
+                child: ,
+               
+                color: Colors.black,
+              ),
+            ),
           ],
         ),
       ),

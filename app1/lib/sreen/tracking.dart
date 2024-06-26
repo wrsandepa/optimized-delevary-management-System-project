@@ -33,9 +33,45 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
     return historyLength;
   }
 
+// Function to check if confirmation status is "delivered"
+  Future<bool?> isDelivered(String parcelId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      // Reference to the specific document in the parcels collection
+      DocumentSnapshot document =
+          await firestore.collection('parcels').doc(parcelId).get();
+
+      var data = document.data() as Map<String, dynamic>;
+
+      // Check if the document exists and has confirmation field
+      if (document.exists && data.isNotEmpty) {
+        String confirmationStatus = data['confirmation'];
+        delivered1 = (confirmationStatus == 'delivered');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('YOUR PARCEL HAS DELEVERY CVOMPLEATED !'),
+            duration: Duration(seconds: 3), // Adjust the duration as needed
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Handle case where confirmation field doesn't exist or is null
+        delivered1 = false;
+      }
+    } catch (e) {
+      print("Error checking confirmation status: $e");
+      delivered1 = false; // Handle error gracefully
+    }
+
+    return delivered1;
+  }
+
 // Function to fetch history length to _historyLength
   Future<void> _fetchhistorylength(String parcleId) async {
     try {
+      isDelivered(parcleId);
       int? length = await getHistoryLength(parcleId);
       setState(() {
         historyLength1 = length;
@@ -46,6 +82,7 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
   }
 
   int? historyLength1;
+  bool? delivered1;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +138,20 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                       ? 'Your Tracking number is invalied '
                       : null,
                 )),
+            SizedBox(
+              height: 10,
+            ),
             ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.deepPurple, // Text color
+                  shadowColor: Colors.deepPurpleAccent, // Shadow color
+                  elevation: 5, // Elevation
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24), // Rounded edges
+                  ),
+                ),
                 onPressed: () async {
                   String parcelId = _traking_num.text.trim();
                   if (_formKey1.currentState!.validate()) {
@@ -184,7 +234,14 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                       : const Color.fromARGB(255, 145, 135, 135),
                 ),
                 beforeLineStyle: LineStyle(
-                  color: historyLength1! >= 2 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 2
+                      ? Colors.orange
+                      : Color.fromARGB(255, 145, 135, 135),
+                ),
+                afterLineStyle: LineStyle(
+                  color: historyLength1! >= 3
+                      ? Colors.orange
+                      : Color.fromARGB(255, 199, 17, 17),
                 ),
               ),
             ] else ...[
