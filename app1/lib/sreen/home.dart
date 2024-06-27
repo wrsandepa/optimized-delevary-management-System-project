@@ -1,4 +1,5 @@
 import 'package:app1/service/display_efficiancy_curior.dart';
+import 'package:app1/sreen/ratingwindow.dart';
 import 'package:app1/sreen/tracking.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,8 +29,9 @@ class _HomescreenState extends State<Homescreen> {
           'confirmationTime': FieldValue.serverTimestamp()
         });
         // Show success snackbar
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             behavior: SnackBarBehavior.floating,
             content: Text('Parcel marked as delivered.'),
             duration: Duration(seconds: 3), // Adjust the duration as needed
@@ -37,8 +39,9 @@ class _HomescreenState extends State<Homescreen> {
           ),
         );
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             behavior: SnackBarBehavior.floating,
             content: Text('Failed to update parcel confirmation.'),
             duration: Duration(seconds: 5),
@@ -142,16 +145,32 @@ class _HomescreenState extends State<Homescreen> {
                     builder: (context) {
                       return AlertDialog(
                         backgroundColor: Colors.amber,
-                        title: const Text('Could`t find name'),
+                        title: const Text('Tracking number'),
                         content: TextFormField(
                           controller: _confirmok,
                         ),
                         actions: [
                           TextButton(
                             onPressed: () {
+                              if (_confirmok.text.trim().isEmpty) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text(
+                                      'Failed to update parcel confirmation.'),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.red,
+                                ));
+                              }
                               updateParcelConfirmation(_confirmok.text.trim());
 
                               Navigator.of(context).pop();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Rating_w(
+                                            parcelId_pass: _confirmok,
+                                          )));
                             },
                             child: const Text(
                               'confirm',

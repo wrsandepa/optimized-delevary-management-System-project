@@ -44,6 +44,7 @@ dependencies:
   timeline_tile: ^2.0.0
   cloud_firestore: ^5.0.0
   lottie: ^3.0.0
+  flutter_rating_bar: ^4.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,6 +71,7 @@ flutter:
 assets:
     #- asset/Animation - 1718942920802.json
     - asset/raking.json
+    - assets1/hometown1.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

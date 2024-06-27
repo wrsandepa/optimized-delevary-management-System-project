@@ -6,6 +6,7 @@ import 'package:app1/sreen/tracking.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 
 class Display_curior_ser extends StatefulWidget {
   const Display_curior_ser({super.key});
@@ -24,7 +25,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Chose your selection!!',
+          'Chose your selection!!!!',
         ),
         backgroundColor: Colors.orange,
       ),
@@ -288,12 +289,12 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                   },
                 ),
               ),
-            Padding(
-              padding: EdgeInsets.all(80),
-              child: Container(
-                child: ,
-               
-                color: Colors.black,
+            SizedBox(height: 100),
+            Container(
+              height: 100,
+              width: 100,
+              child: LottieBuilder.network(
+                'assets1/annimation/openwindow.json',
               ),
             ),
           ],
