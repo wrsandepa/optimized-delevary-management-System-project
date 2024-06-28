@@ -83,233 +83,241 @@ class _Display_curior_serState extends State<Display_curior_ser> {
       bottomNavigationBar: const BottomAppBar(
         color: Colors.orange,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(50),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 255, 191, 0),
-                        Colors.amberAccent,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage('assets1/annimation/pic.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(50),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 255, 191, 0),
+                          Colors.amberAccent,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          offset: const Offset(6, 6),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
+                        BoxShadow(
+                          color: Colors.white.withOpacity(0.8),
+                          offset: const Offset(-6, -6),
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                        ),
                       ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: const Offset(6, 6),
-                        blurRadius: 10,
-                        spreadRadius: 1,
+                    child: TextFormField(
+                      controller: home_town,
+                      decoration: InputDecoration(
+                        labelText: 'Enter home town',
+                        labelStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 218, 12, 12)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                      BoxShadow(
-                        color: Colors.white.withOpacity(0.8),
-                        offset: const Offset(-6, -6),
-                        blurRadius: 10,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: home_town,
-                    decoration: InputDecoration(
-                      labelText: 'Enter home town',
-                      labelStyle: const TextStyle(
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 218, 12, 12)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  )),
-            ),
-            ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: Colors.amberAccent),
-              onPressed: () {
-                if (home_town.text.isNotEmpty) {
-                  setState(() {
-                    _futureCourierServices =
-                        getEfficientCourierServices(home_town.text);
-                  });
-                }
-                if (home_town.text.isEmpty || home_town.text.trim().isEmpty) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.red,
-                            size: 100,
-                          ),
-                          backgroundColor: Colors.amber,
-                          title: const Text('Could`t find name'),
-                          content: Text(' empty entry!'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text(
-                                'OK',
-                                style: TextStyle(color: Colors.red),
-                              ),
+                    )),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amberAccent),
+                onPressed: () {
+                  if (home_town.text.isNotEmpty) {
+                    setState(() {
+                      _futureCourierServices =
+                          getEfficientCourierServices(home_town.text);
+                    });
+                  }
+                  if (home_town.text.isEmpty || home_town.text.trim().isEmpty) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.red,
+                              size: 100,
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  });
-                  ;
-                }
-              },
-              child: const Text('Submit'),
-            ),
-            if (_futureCourierServices != null)
-              Expanded(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: _futureCourierServices,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-
+                            backgroundColor: Colors.amber,
+                            title: const Text('Could`t find name'),
+                            content: Text(' empty entry!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  'OK',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    });
                     ;
-                    List<Map<String, dynamic>> courierServices =
-                        snapshot.data ?? [];
+                  }
+                },
+                child: const Text('Submit'),
+              ),
+              if (_futureCourierServices != null)
+                Expanded(
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _futureCourierServices,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
 
-                    return ListView.builder(
-                      itemCount: courierServices.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> courierService =
-                            courierServices[index];
-                        return InkWell(
-                          onTap: () {
-                            courierServices1 = snapshot.data ?? [];
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text(
-                                    'Thank you choosing us!',
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  backgroundColor: Colors.amber,
-                                  content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'email: ${courierService['address']['email_address']}',
-                                          style: const TextStyle(
-                                              fontSize: 24,
-                                              color: Colors.black),
+                      ;
+                      List<Map<String, dynamic>> courierServices =
+                          snapshot.data ?? [];
+
+                      return ListView.builder(
+                        itemCount: courierServices.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> courierService =
+                              courierServices[index];
+                          return InkWell(
+                            onTap: () {
+                              courierServices1 = snapshot.data ?? [];
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      'Thank you choosing us!',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    backgroundColor: Colors.amber,
+                                    content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'email: ${courierService['address']['email_address']}',
+                                            style: const TextStyle(
+                                                fontSize: 24,
+                                                color: Colors.black),
+                                          ),
+                                          Text(
+                                            'phone: ${courierService['address']['phone_number']}',
+                                            style: const TextStyle(
+                                                fontSize: 24,
+                                                color: Colors.black),
+                                          ),
+                                          Text(
+                                            'Address: ${courierService['address']['address']}',
+                                            style: const TextStyle(
+                                                fontSize: 24,
+                                                color: Colors.black),
+                                          )
+                                        ]),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text(
+                                          'OK',
+                                          style: TextStyle(color: Colors.red),
                                         ),
-                                        Text(
-                                          'phone: ${courierService['address']['phone_number']}',
-                                          style: const TextStyle(
-                                              fontSize: 24,
-                                              color: Colors.black),
-                                        ),
-                                        Text(
-                                          'Address: ${courierService['address']['address']}',
-                                          style: const TextStyle(
-                                              fontSize: 24,
-                                              color: Colors.black),
-                                        )
-                                      ]),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text(
-                                        'OK',
-                                        style: TextStyle(color: Colors.red),
                                       ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color.fromARGB(255, 255, 191, 0),
+                                      Colors.amberAccent,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      offset: const Offset(6, 6),
+                                      blurRadius: 10,
+                                      spreadRadius: 1,
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.8),
+                                      offset: const Offset(-6, -6),
+                                      blurRadius: 10,
+                                      spreadRadius: 1,
                                     ),
                                   ],
-                                );
-                              },
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color.fromARGB(255, 255, 191, 0),
-                                    Colors.amberAccent,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    offset: const Offset(6, 6),
-                                    blurRadius: 10,
-                                    spreadRadius: 1,
-                                  ),
-                                  BoxShadow(
-                                    color: Colors.white.withOpacity(0.8),
-                                    offset: const Offset(-6, -6),
-                                    blurRadius: 10,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
-                              ),
-                              margin: const EdgeInsets.all(8.0),
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    ' ${courierService['name']}',
-                                    style: const TextStyle(
-                                        fontSize: 24, color: Colors.black),
-                                  ),
-                                  Text(
-                                    'Rating: ${courierService['rating']}',
-                                    style: const TextStyle(
-                                        fontSize: 16, color: Colors.black),
-                                  ),
-                                ],
+                                margin: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      ' ${courierService['name']}',
+                                      style: const TextStyle(
+                                          fontSize: 24, color: Colors.black),
+                                    ),
+                                    Text(
+                                      'Rating: ${courierService['rating']}',
+                                      style: const TextStyle(
+                                          fontSize: 16, color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-
-            //lottie file located static in bottom
-            Positioned(
-                bottom: 20,
-                right: 20,
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  child: LottieBuilder.network(
-                    'assets1/annimation/openwindow.json',
+                          );
+                        },
+                      );
+                    },
                   ),
-                ))
-          ],
+                ),
+
+              //lottie file located static in bottom
+              Positioned(
+                  bottom: 20,
+                  right: 20,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    child: LottieBuilder.network(
+                      'assets1/annimation/openwindow.json',
+                    ),
+                  ))
+            ],
+          ),
         ),
       ),
     );

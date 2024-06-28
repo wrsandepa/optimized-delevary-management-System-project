@@ -95,185 +95,194 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
       bottomNavigationBar: const BottomAppBar(
         color: Colors.orange,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey1,
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 255, 191, 0),
-                      Colors.amberAccent,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      offset: const Offset(6, 6),
-                      blurRadius: 10,
-                      spreadRadius: 1,
-                    ),
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.8),
-                      offset: const Offset(-6, -6),
-                      blurRadius: 10,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  controller: _traking_num,
-                  decoration: InputDecoration(
-                      hintText: "enter your tracking number",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20))),
-                  validator: (value) => value == null ||
-                          value.trim().isEmpty ||
-                          getHistoryLength(_traking_num.text.trim()) == null
-                      ? 'Your Tracking number is invalied '
-                      : null,
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.deepPurple, // Text color
-                  shadowColor: Colors.deepPurpleAccent, // Shadow color
-                  elevation: 5, // Elevation
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24), // Rounded edges
-                  ),
-                ),
-                onPressed: () async {
-                  String parcelId = _traking_num.text.trim();
-                  if (_formKey1.currentState!.validate()) {
-                    await _fetchhistorylength(parcelId);
-                    print(historyLength1);
-                  }
-                },
-                child: const Text("TRACK")),
-            if (historyLength1 != null) ...[
-              TimelineTile(
-                endChild: const Padding(
-                  padding: EdgeInsets.all(40),
-                  child: Text('PROCESSING'),
-                ),
-                indicatorStyle: IndicatorStyle(
-                  iconStyle: IconStyle(
-                      iconData:
-                          historyLength1! >= 0 ? Icons.check : Icons.close,
-                      fontSize: 20),
-                  color: historyLength1! >= 0
-                      ? Colors.orange
-                      : const Color.fromARGB(255, 87, 65, 65),
-                ),
-                afterLineStyle: LineStyle(
-                  color: historyLength1! >= 0 ? Colors.orange : Colors.white,
-                ),
-                isFirst: true,
-              ),
-              TimelineTile(
-                endChild: const Padding(
-                  padding: EdgeInsets.all(40),
-                  child: Text('SHIPPED'),
-                ),
-                indicatorStyle: IndicatorStyle(
-                  iconStyle: IconStyle(
-                      iconData:
-                          historyLength1! >= 1 ? Icons.check : Icons.close,
-                      fontSize: 20),
-                  color: historyLength1! >= 1 ? Colors.orange : Colors.white,
-                ),
-                beforeLineStyle: LineStyle(
-                  color: historyLength1! >= 0 ? Colors.orange : Colors.white,
-                ),
-                afterLineStyle: LineStyle(
-                  color: historyLength1! >= 1 ? Colors.orange : Colors.white,
-                ),
-              ),
-              TimelineTile(
-                endChild: const Padding(
-                  padding: EdgeInsets.all(40),
-                  child: Text('DELEVARING'),
-                ),
-                indicatorStyle: IndicatorStyle(
-                  iconStyle: IconStyle(
-                      iconData:
-                          historyLength1! >= 2 ? Icons.check : Icons.close,
-                      fontSize: 20),
-                  color: historyLength1! >= 2 ? Colors.orange : Colors.white,
-                ),
-                beforeLineStyle: LineStyle(
-                  color: historyLength1! >= 1 ? Colors.orange : Colors.white,
-                ),
-                afterLineStyle: LineStyle(
-                  color: historyLength1! >= 2 ? Colors.orange : Colors.white,
-                ),
-              ),
-              TimelineTile(
-                endChild: const Padding(
-                  padding: EdgeInsets.all(40),
-                  child: Text('DELEVARY OUT'),
-                ),
-                isLast: true,
-                indicatorStyle: IndicatorStyle(
-                  iconStyle: IconStyle(
-                      iconData:
-                          historyLength1! >= 3 ? Icons.check : Icons.close,
-                      fontSize: 20),
-                  color: historyLength1! >= 3
-                      ? Colors.orange
-                      : const Color.fromARGB(255, 145, 135, 135),
-                ),
-                beforeLineStyle: LineStyle(
-                  color: historyLength1! >= 2
-                      ? Colors.orange
-                      : Color.fromARGB(255, 145, 135, 135),
-                ),
-                afterLineStyle: LineStyle(
-                  color: historyLength1! >= 3
-                      ? Colors.orange
-                      : Color.fromARGB(255, 199, 17, 17),
-                ),
-              ),
-            ] else ...[
-              SizedBox(
-                width: 300,
-                height: 300,
-                child:
-                    // Lottie animation
-                    LottieBuilder.network('assets1/annimation/raking.json'),
-              ),
-              // Splash message (conditionally shown)
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage('assets1/annimation/pic.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey1,
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               Container(
-                color: Colors.black
-                    .withOpacity(0.4), // Semi-transparent background
-                padding: const EdgeInsets.all(16),
-                child: const Text(
-                  'Parcel Not Found!...',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 255, 191, 0),
+                        Colors.amberAccent,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        offset: const Offset(6, 6),
+                        blurRadius: 10,
+                        spreadRadius: 1,
+                      ),
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.8),
+                        offset: const Offset(-6, -6),
+                        blurRadius: 10,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: TextFormField(
+                    controller: _traking_num,
+                    decoration: InputDecoration(
+                        hintText: "enter your tracking number",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                    validator: (value) => value == null ||
+                            value.trim().isEmpty ||
+                            getHistoryLength(_traking_num.text.trim()) == null
+                        ? 'Your Tracking number is invalied '
+                        : null,
+                  )),
+              SizedBox(
+                height: 10,
               ),
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.red,
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.deepPurple, // Text color
+                    shadowColor: Colors.deepPurpleAccent, // Shadow color
+                    elevation: 5, // Elevation
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24), // Rounded edges
+                    ),
+                  ),
+                  onPressed: () async {
+                    String parcelId = _traking_num.text.trim();
+                    if (_formKey1.currentState!.validate()) {
+                      await _fetchhistorylength(parcelId);
+                      print(historyLength1);
+                    }
+                  },
+                  child: const Text("TRACK")),
+              if (historyLength1 != null) ...[
+                TimelineTile(
+                  endChild: const Padding(
+                    padding: EdgeInsets.all(40),
+                    child: Text('PROCESSING'),
+                  ),
+                  indicatorStyle: IndicatorStyle(
+                    iconStyle: IconStyle(
+                        iconData:
+                            historyLength1! >= 0 ? Icons.check : Icons.close,
+                        fontSize: 20),
+                    color: historyLength1! >= 0
+                        ? Colors.orange
+                        : const Color.fromARGB(255, 87, 65, 65),
+                  ),
+                  afterLineStyle: LineStyle(
+                    color: historyLength1! >= 0 ? Colors.orange : Colors.white,
+                  ),
+                  isFirst: true,
+                ),
+                TimelineTile(
+                  endChild: const Padding(
+                    padding: EdgeInsets.all(40),
+                    child: Text('SHIPPED'),
+                  ),
+                  indicatorStyle: IndicatorStyle(
+                    iconStyle: IconStyle(
+                        iconData:
+                            historyLength1! >= 1 ? Icons.check : Icons.close,
+                        fontSize: 20),
+                    color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                  ),
+                  beforeLineStyle: LineStyle(
+                    color: historyLength1! >= 0 ? Colors.orange : Colors.white,
+                  ),
+                  afterLineStyle: LineStyle(
+                    color: historyLength1! >= 1 ? Colors.orange : Colors.white,
                   ),
                 ),
-              ),
-            ]
-          ]),
+                TimelineTile(
+                  endChild: const Padding(
+                    padding: EdgeInsets.all(40),
+                    child: Text('DELEVARING'),
+                  ),
+                  indicatorStyle: IndicatorStyle(
+                    iconStyle: IconStyle(
+                        iconData:
+                            historyLength1! >= 2 ? Icons.check : Icons.close,
+                        fontSize: 20),
+                    color: historyLength1! >= 2 ? Colors.orange : Colors.white,
+                  ),
+                  beforeLineStyle: LineStyle(
+                    color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                  ),
+                  afterLineStyle: LineStyle(
+                    color: historyLength1! >= 2 ? Colors.orange : Colors.white,
+                  ),
+                ),
+                TimelineTile(
+                  endChild: const Padding(
+                    padding: EdgeInsets.all(40),
+                    child: Text('DELEVARY OUT'),
+                  ),
+                  isLast: true,
+                  indicatorStyle: IndicatorStyle(
+                    iconStyle: IconStyle(
+                        iconData:
+                            historyLength1! >= 3 ? Icons.check : Icons.close,
+                        fontSize: 20),
+                    color: historyLength1! >= 3
+                        ? Colors.orange
+                        : const Color.fromARGB(255, 145, 135, 135),
+                  ),
+                  beforeLineStyle: LineStyle(
+                    color: historyLength1! >= 2
+                        ? Colors.orange
+                        : Color.fromARGB(255, 145, 135, 135),
+                  ),
+                  afterLineStyle: LineStyle(
+                    color: historyLength1! >= 3
+                        ? Colors.orange
+                        : Color.fromARGB(255, 199, 17, 17),
+                  ),
+                ),
+              ] else ...[
+                SizedBox(
+                  width: 300,
+                  height: 300,
+                  child:
+                      // Lottie animation
+                      LottieBuilder.network('assets1/annimation/raking.json'),
+                ),
+                // Splash message (conditionally shown)
+                Container(
+                  color: Colors.black
+                      .withOpacity(0.4), // Semi-transparent background
+                  padding: const EdgeInsets.all(16),
+                  child: const Text(
+                    'Parcel Not Found!...',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+              ]
+            ]),
+          ),
         ),
       ),
     );
