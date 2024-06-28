@@ -85,9 +85,9 @@ class _Display_curior_serState extends State<Display_curior_ser> {
         color: Colors.orange,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage('assets1/annimation/pic.jpg'),
+            image: NetworkImage('assets1/annimation/pic2.jpg'),
             fit: BoxFit.cover,
           ),
         ),

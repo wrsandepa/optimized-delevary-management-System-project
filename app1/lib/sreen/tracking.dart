@@ -99,7 +99,7 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage('assets1/annimation/pic.jpg'),
+            image: NetworkImage('assets1/annimation/pic2.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -153,8 +153,8 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.deepPurple, // Text color
-                    shadowColor: Colors.deepPurpleAccent, // Shadow color
+                    backgroundColor: Colors.amber, // Text color
+                    shadowColor: Colors.orange, // Shadow color
                     elevation: 5, // Elevation
                     padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     shape: RoundedRectangleBorder(
