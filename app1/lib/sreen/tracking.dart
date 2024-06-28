@@ -93,6 +93,7 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
           ),
           backgroundColor: Colors.orange),
       bottomNavigationBar: const BottomAppBar(
+        height: 60,
         color: Colors.orange,
       ),
       body: Container(

@@ -73,7 +73,7 @@ assets:
     - asset/raking.json
     - assets1/hometown1.json
     - assets1/annimation/background.jpg
-    - assets1/annimation/pic.jpg
+    - assets1/annimation/pic2.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

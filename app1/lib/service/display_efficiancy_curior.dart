@@ -81,6 +81,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
         ),
       ),
       bottomNavigationBar: const BottomAppBar(
+        height: 60,
         color: Colors.orange,
       ),
       body: Container(
