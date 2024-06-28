@@ -1,3 +1,4 @@
+import 'package:app1/sreen/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,18 +22,18 @@ class _Rating_wState extends State<Rating_w> {
       // Get reference to the parcel document
       DocumentReference parcelRef =
           FirebaseFirestore.instance.collection('parcels').doc(parcelId);
-      print(Rating);
+     
       // Get the parcel document
       DocumentSnapshot parcelSnapshot = await parcelRef.get();
 
       if (parcelSnapshot.exists) {
         var parcelData = parcelSnapshot.data() as Map<String, dynamic>;
         String courierServiceId = parcelData[
-            'parcelHolder']; // Assuming 'parcelHolder' contains the courier service ID
+            'parcelholder']; // Assuming 'parcelHolder' contains the courier service ID
 
         // Get reference to the courier service document
         DocumentReference courierRef = FirebaseFirestore.instance
-            .collection('curiorservice')
+            .collection('courierServices')
             .doc(courierServiceId);
 
         // Get the current data of the courier service
@@ -151,6 +152,10 @@ class _Rating_wState extends State<Rating_w> {
                 if (Rating > 0) {
                   updateCourierServiceRatingByParcel(
                       widget.parcelId_pass, Rating);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Homescreen()));
                 }
               },
               child: const Text(

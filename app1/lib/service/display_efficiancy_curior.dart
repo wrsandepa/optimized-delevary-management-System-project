@@ -2,6 +2,7 @@ import 'dart:js_interop';
 import 'dart:ui';
 
 import 'package:app1/sreen/dashboard.dart';
+import 'package:app1/sreen/home.dart';
 import 'package:app1/sreen/tracking.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,14 @@ class _Display_curior_serState extends State<Display_curior_ser> {
         child: ListView(
           children: [
             DrawerHeader(child: Text("LOGO")),
-            Icon(Icons.home),
+            GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Homescreen()));
+                },
+                child: Icon(Icons.home)),
             ListTile(
               contentPadding: EdgeInsets.symmetric(
                   vertical: 10.0, horizontal: 16.0), // Add padding here
@@ -73,7 +81,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
         ),
       ),
       bottomNavigationBar: const BottomAppBar(
-        color: Colors.amber,
+        color: Colors.orange,
       ),
       body: Padding(
         padding: EdgeInsets.all(50),
@@ -289,14 +297,18 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                   },
                 ),
               ),
-            SizedBox(height: 100),
-            Container(
-              height: 100,
-              width: 100,
-              child: LottieBuilder.network(
-                'assets1/annimation/openwindow.json',
-              ),
-            ),
+
+            //lottie file located static in bottom
+            Positioned(
+                bottom: 20,
+                right: 20,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  child: LottieBuilder.network(
+                    'assets1/annimation/openwindow.json',
+                  ),
+                ))
           ],
         ),
       ),

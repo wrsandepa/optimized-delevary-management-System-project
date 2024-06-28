@@ -72,6 +72,9 @@ assets:
     #- asset/Animation - 1718942920802.json
     - asset/raking.json
     - assets1/hometown1.json
+    - assets1/annimation/background.jpg
+    - assets1/annimation/pic.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
