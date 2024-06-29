@@ -26,7 +26,11 @@ class _HomepageState extends State<Homepage> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      ,
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            'assets/ThunderDrop-text-Color-logo.png'),
+                        fit: BoxFit.contain,
+                      ),
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -65,6 +69,9 @@ class _HomepageState extends State<Homepage> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          width: 20,
+                        )
                       ],
                     ),
                   ),
@@ -93,6 +100,44 @@ class _HomepageState extends State<Homepage> {
                           width: MediaQuery.of(context).size.width / 2 -
                               150, // Adjust for padding
                           margin: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: Text('GET START'),
+                                style: ElevatedButton.styleFrom(
+                                  elevation:
+                                      10, // Elevation (controls the "3D" effect)
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        0), // Button border radius
+                                  ),
+                                  padding: EdgeInsets.all(
+                                      20), // Padding around the button content
+                                  // Add a gradient background
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: Text('SINGUP'),
+                                style: ElevatedButton.styleFrom(
+                                  elevation:
+                                      10, // Elevation (controls the "3D" effect)
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        0), // Button border radius
+                                  ),
+                                  padding: EdgeInsets.all(
+                                      20), // Padding around the button content
+                                  // Add a gradient background
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
