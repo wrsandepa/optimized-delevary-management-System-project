@@ -41,7 +41,7 @@ class _LogingState extends State<Loging> {
         title: const Text(
           'hello',
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.orange,
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -57,66 +57,70 @@ class _LogingState extends State<Loging> {
         ],
       ),
       body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(
-            margin:
-                const EdgeInsets.fromLTRB(1000 / 100, 5 / 100, 4, 18000 / 100),
-            // color: Colors.red,
-            child: const Text(
-              'Login your account',
-              style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 20,
-                  fontStyle: FontStyle.italic),
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(
+                  1000 / 100, 5 / 100, 4, 18000 / 100),
+              // color: Colors.red,
+              child: const Text(
+                'Login your account',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontStyle: FontStyle.italic),
+              ),
             ),
-          ),
-          SizedBox(
-            width: 400,
-            child: TextFormField(
-              controller: _email,
-              decoration: InputDecoration(
-                  label: const Text(
-                    'email',
-                    style: TextStyle(
-                      color: Colors.blue,
+            SizedBox(
+              width: 400,
+              child: TextFormField(
+                controller: _email,
+                decoration: InputDecoration(
+                    label: const Text(
+                      'email',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
                     ),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25))),
-              obscureText: false, // This will obscure the text with star marks
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25))),
+                obscureText:
+                    false, // This will obscure the text with star marks
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: 400,
-            child: TextFormField(
-              controller: _password,
-              decoration: InputDecoration(
-                  label: const Text(
-                    'Password',
-                    style: TextStyle(
-                      color: Colors.blue,
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 400,
+              child: TextFormField(
+                controller: _password,
+                decoration: InputDecoration(
+                    label: const Text(
+                      'Password',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
                     ),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25))),
-              obscureText: true, // This will obscure the text with star marks
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25))),
+                obscureText: true, // This will obscure the text with star marks
+              ),
             ),
-          ),
-          const SizedBox(height: 50),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Singupage()),
-              );
-            },
-            child: const Text(
-              'already haven`t account',
-              style: TextStyle(color: Colors.blue, fontSize: 15),
+            const SizedBox(height: 50),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Singupage()),
+                );
+              },
+              child: const Text(
+                'already haven`t account',
+                style: TextStyle(color: Colors.blue, fontSize: 15),
+              ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
       backgroundColor: Colors.white,
     );
