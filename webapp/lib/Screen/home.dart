@@ -12,6 +12,8 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
+final _formkey1 = GlobalKey<FormState>();
+
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
   List<String> imageUrls = [
@@ -54,46 +56,87 @@ class _HomepageState extends State<Homepage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.black),
-              child: Text(
-                'Sign In',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+      drawer: Form(
+        key: _formkey1,
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(color: Colors.black),
+                child: Text(
+                  'Sign In',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextFormField(
+                        controller: singinemail,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                        }),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                        controller: singinpass,
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                          border: OutlineInputBorder(),
+                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                        }),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formkey1.currentState!.validate()) {
+                          Singin();
+                          print(user);
+                          if (user != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                content: Text('Succesfully!'),
+                                duration: Duration(
+                                    seconds:
+                                        3), // Adjust the duration as needed
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                content: Text('Invalied email or password!'),
+                                duration: Duration(
+                                    seconds:
+                                        3), // Adjust the duration as needed
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                          ;
+                        }
+                        ;
+                      },
+                      child: const Text('Sign In'),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                    ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle sign-in
-                    },
-                    child: const Text('Sign In'),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       endDrawer: _buildSignupDrawer(context),
@@ -305,24 +348,35 @@ class _HomepageState extends State<Homepage>
 
 final TextEditingController singupemail = TextEditingController();
 final TextEditingController singuppass = TextEditingController();
-final _formKey = GlobalKey<FormState>();
-Widget _buildSignupDrawer(BuildContext context) {
-  Future<dynamic> singup() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: singupemail.text, password: singuppass.text);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text('Oops Sumthing went Wrong!'),
-          duration: Duration(seconds: 3), // Adjust the duration as needed
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
+final TextEditingController singinemail = TextEditingController();
+final TextEditingController singinpass = TextEditingController();
 
+final _formKey = GlobalKey<FormState>();
+User? user;
+//sing in function
+Future<dynamic> singup() async {
+  try {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: singupemail.text, password: singuppass.text);
+  } catch (e) {}
+}
+
+//sing in function
+Future<User?> Singin() async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  try {
+    UserCredential us_cred = await auth.signInWithEmailAndPassword(
+        email: singinemail.text, password: singinpass.text);
+    user = us_cred.user;
+    if (user != null) {}
+  } catch (e) {
+    print("error!!!");
+  }
+  return user;
+}
+
+Widget _buildSignupDrawer(BuildContext context) {
   return Form(
     key: _formKey,
     child: Drawer(
@@ -382,6 +436,16 @@ Widget _buildSignupDrawer(BuildContext context) {
                           duration: Duration(
                               seconds: 3), // Adjust the duration as needed
                           backgroundColor: Colors.green,
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text('Oops Sumthing went Wrong!'),
+                          duration: Duration(
+                              seconds: 3), // Adjust the duration as needed
+                          backgroundColor: Colors.red,
                         ),
                       );
                     }
