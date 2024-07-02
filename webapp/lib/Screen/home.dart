@@ -350,6 +350,7 @@ final TextEditingController singupemail = TextEditingController();
 final TextEditingController singuppass = TextEditingController();
 final TextEditingController singinemail = TextEditingController();
 final TextEditingController singinpass = TextEditingController();
+final TextEditingController comfirmsinguppass = TextEditingController();
 
 final _formKey = GlobalKey<FormState>();
 User? user;
@@ -414,6 +415,19 @@ Widget _buildSignupDrawer(BuildContext context) {
                     }
                   },
                   controller: singuppass,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true,
+                ),
+                TextFormField(
+                  validator: (singuppass) {
+                    if (singuppass != comfirmsinguppass) {
+                      return 'Does not match your password';
+                    }
+                  },
+                  controller: comfirmsinguppass,
                   decoration: const InputDecoration(
                     labelText: 'Password',
                     border: OutlineInputBorder(),
