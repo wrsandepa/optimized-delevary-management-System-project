@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +54,223 @@ class _HomepageState extends State<Homepage>
     super.dispose();
   }
 
+  Widget _buildSignupDrawer(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.black),
+              child: Text(
+                'Sign Up',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                    },
+                    controller: singupemail,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                    },
+                    controller: singuppass,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Re type  password';
+                      }
+                      if (value != singuppass.text) {
+                        return 'Does not match your password';
+                      }
+                    },
+                    controller: comfirmsinguppass,
+                    decoration: const InputDecoration(
+                      labelText: 'Confirm Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 16),
+                  // TextFormField(
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Re type  username';
+                  //     }
+                  //   },
+                  //   controller: username,
+                  //   decoration: const InputDecoration(
+                  //     labelText: 'username',
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 16),
+                  // TextFormField(
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'confirm username';
+                  //     }
+                  //     if (value != username.text) {
+                  //       return 'Does not match your usrname';
+                  //     }
+                  //   },
+                  //   controller: comfirm_username,
+                  //   decoration: const InputDecoration(
+                  //     labelText: 'confirm username',
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    validator: (value) {
+                      if ((value == null || value.isEmpty) &&
+                          value?.length != 10) {
+                        return 'enter phone number';
+                      }
+                    },
+                    controller: phone_num,
+                    decoration: const InputDecoration(
+                      labelText: 'phone number',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'enter Address';
+                      }
+                    },
+                    controller: addres,
+                    decoration: const InputDecoration(
+                      labelText: 'location address',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: selectedRole,
+                    items: ['domex', 'pronto', 'transex'].map((String role) {
+                      return DropdownMenuItem<String>(
+                        value: role,
+                        child: Text(role),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedRole = newValue!;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Name of the courier',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a role';
+                      }
+                      return null; // Return null if the input is valid
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: selectbranches,
+                    items:
+                        ['matara', 'akuressa', 'vavuniya'].map((String role) {
+                      return DropdownMenuItem<String>(
+                        value: role,
+                        child: Text(role),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectbranches = newValue!;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'branch name',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a role';
+                      }
+                      return null; // Return null if the input is valid
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      print(selectedRole); //dropdown value
+                      print(singupemail.text);
+                      if (_formKey.currentState!.validate()) {
+                        singup();
+                        addCourierData(
+                            selectedRole!,
+                            selectedRole!,
+                            singupemail.text,
+                            selectbranches!,
+                            phone_num.text,
+                            addres.text); //String name,
+
+                        singupemail.clear();
+                        singuppass.clear();
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text('Succesfully Sing up!'),
+                            duration: Duration(
+                                seconds: 3), // Adjust the duration as needed
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text('Oops Sumthing went Wrong!'),
+                            duration: Duration(
+                                seconds: 3), // Adjust the duration as needed
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Sign Up'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +320,11 @@ class _HomepageState extends State<Homepage>
                       onPressed: () {
                         if (_formkey1.currentState!.validate()) {
                           Singin();
-                          print(user);
+                          singinemail.clear();
+                          singinpass.clear();
+                          Navigator.pop(context);
+                          //go to inside
+
                           if (user != null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -351,14 +573,22 @@ final TextEditingController singuppass = TextEditingController();
 final TextEditingController singinemail = TextEditingController();
 final TextEditingController singinpass = TextEditingController();
 final TextEditingController comfirmsinguppass = TextEditingController();
+final TextEditingController username = TextEditingController();
+final TextEditingController comfirm_username = TextEditingController();
+final TextEditingController phone_num = TextEditingController();
+final TextEditingController addres = TextEditingController();
+final TextEditingController branches = TextEditingController();
 
 final _formKey = GlobalKey<FormState>();
+String? selectedRole;
+String? selectbranches;
 User? user;
 //sing in function
 Future<dynamic> singup() async {
   try {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: singupemail.text, password: singuppass.text);
+    print('hiii');
   } catch (e) {}
 }
 
@@ -377,103 +607,6 @@ Future<User?> Singin() async {
   return user;
 }
 
-Widget _buildSignupDrawer(BuildContext context) {
-  return Form(
-    key: _formKey,
-    child: Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.black),
-            child: Text(
-              'Sign Up',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                  },
-                  controller: singupemail,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                  },
-                  controller: singuppass,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                ),
-                TextFormField(
-                  validator: (singuppass) {
-                    if (singuppass != comfirmsinguppass) {
-                      return 'Does not match your password';
-                    }
-                  },
-                  controller: comfirmsinguppass,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    print(singupemail.text);
-                    if (_formKey.currentState!.validate()) {
-                      singup();
-                      singupemail.clear();
-                      singuppass.clear();
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text('Succesfully Sing up!'),
-                          duration: Duration(
-                              seconds: 3), // Adjust the duration as needed
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text('Oops Sumthing went Wrong!'),
-                          duration: Duration(
-                              seconds: 3), // Adjust the duration as needed
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Sign Up'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
 //singup funtion
 
 /// display contactus button
@@ -514,4 +647,52 @@ void _showContactDialog(BuildContext context) {
       );
     },
   );
+}
+
+//function of add courier services data
+
+Future<void> addCourierData(
+  String courierServicesdocid,
+  String name,
+  String email,
+  String locationAddress,
+  String phoneNumber,
+  String address,
+) async {
+  try {
+    // Reference to the main collection
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection('courierServices');
+
+    // Check if the courier service document already exists
+    DocumentSnapshot docSnapshot =
+        await collectionRef.doc(courierServicesdocid).get();
+
+    if (!docSnapshot.exists) {
+      // Set the data for the courier service document if it does not exist
+      await collectionRef.doc(courierServicesdocid).set({
+        'name': name,
+        'user_counter': 0,
+      });
+    }
+
+    // Reference to the branches subcollection within the courier service document
+    DocumentReference courierServiceDoc =
+        collectionRef.doc(courierServicesdocid);
+    CollectionReference branchesCollection =
+        courierServiceDoc.collection('branches');
+
+    // Add data to the branches subcollection with a new document ID
+    await branchesCollection.add({
+      'email_address': email,
+      'location_address': locationAddress,
+      'phone_number': phoneNumber,
+      'address': address,
+    });
+
+    print('Courier service and branch data added successfully!');
+  } catch (e) {
+    print('Error adding courier service and branch data: $e');
+    // Handle any errors here
+  }
 }
