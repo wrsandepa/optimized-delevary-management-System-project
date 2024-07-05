@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -29,13 +31,17 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
   ];
 
   Future<void> _checkParcelExists() async {
-    final doc = await FirebaseFirestore.instance
-        .collection('parcels')
-        .doc(_trackingNumberController.text.trim())
-        .get();
-    setState(() {
-      _parcelExists = doc.exists;
-    });
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('parcels')
+          .doc(_trackingNumberController.text.trim())
+          .get();
+      setState(() {
+        _parcelExists = doc.exists;
+      });
+    } catch (e) {
+      print('error is :: $e');
+    }
   }
 
   Future<void> _addParcel() async {
