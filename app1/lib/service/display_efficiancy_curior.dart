@@ -332,7 +332,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
         .collection('courierServices')
         .orderBy('rating',
             descending: true) // Example: order by descending rating
-        .limit(2) // Limit to top 2 efficient services
+        .limit(5) // Limit to top 2 efficient services
         .get();
 
     for (var courierServiceDoc in querySnapshot.docs) {

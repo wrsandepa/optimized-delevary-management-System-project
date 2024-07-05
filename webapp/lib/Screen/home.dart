@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:webapp/Screen/add_parcels.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({
@@ -17,6 +18,46 @@ final _formkey1 = GlobalKey<FormState>();
 
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
+  /// display contactus button
+  void _showContactDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Contact Us'),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.phone),
+                title: Text('+94 779038886'),
+                subtitle: Text('Call us for any inquiries.'),
+              ),
+              ListTile(
+                leading: Icon(Icons.email),
+                title: Text('support@turbodrop.com'),
+                subtitle: Text('Email us your questions.'),
+              ),
+              ListTile(
+                leading: Icon(Icons.location_on),
+                title: Text('123 TurboDrop St.'),
+                subtitle: Text('Colombo, Sri Lanka'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   List<String> imageUrls = [
     'assets/3d-delivery-robot-working.jpg',
     'assets/deliver-man-holding-package.jpg',
@@ -26,6 +67,33 @@ class _HomepageState extends State<Homepage>
   int currentImageIndex = 0;
   late AnimationController _controller;
   late Animation<Offset> _animation;
+
+//sing in function
+  Future<User?> Singin() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    try {
+      UserCredential us_cred = await auth.signInWithEmailAndPassword(
+          email: singinemail.text, password: singinpass.text);
+      user = us_cred.user;
+      if (user != null) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ParcelEntryScreen()));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Successfully'),
+            duration: Duration(seconds: 3), // Adjust the duration as needed
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      print("error!!!");
+    }
+    return user;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -116,34 +184,34 @@ class _HomepageState extends State<Homepage>
                     obscureText: true,
                   ),
                   const SizedBox(height: 16),
-                  // TextFormField(
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Re type  username';
-                  //     }
-                  //   },
-                  //   controller: username,
-                  //   decoration: const InputDecoration(
-                  //     labelText: 'username',
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 16),
-                  // TextFormField(
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'confirm username';
-                  //     }
-                  //     if (value != username.text) {
-                  //       return 'Does not match your usrname';
-                  //     }
-                  //   },
-                  //   controller: comfirm_username,
-                  //   decoration: const InputDecoration(
-                  //     labelText: 'confirm username',
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  // ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Re type  username';
+                      }
+                    },
+                    controller: username,
+                    decoration: const InputDecoration(
+                      labelText: 'username',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'confirm username';
+                      }
+                      if (value != username.text) {
+                        return 'Does not match your usrname';
+                      }
+                    },
+                    controller: comfirm_username,
+                    decoration: const InputDecoration(
+                      labelText: 'confirm username',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   TextFormField(
                     validator: (value) {
@@ -229,7 +297,7 @@ class _HomepageState extends State<Homepage>
                       if (_formKey.currentState!.validate()) {
                         singup();
                         addCourierData(
-                            selectedRole!,
+                            comfirm_username.text,
                             selectedRole!,
                             singupemail.text,
                             selectbranches!,
@@ -323,33 +391,10 @@ class _HomepageState extends State<Homepage>
                           singinemail.clear();
                           singinpass.clear();
                           Navigator.pop(context);
-                          //go to inside
 
-                          if (user != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                content: Text('Succesfully!'),
-                                duration: Duration(
-                                    seconds:
-                                        3), // Adjust the duration as needed
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                content: Text('Invalied email or password!'),
-                                duration: Duration(
-                                    seconds:
-                                        3), // Adjust the duration as needed
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
                           ;
                         }
+
                         ;
                       },
                       child: const Text('Sign In'),
@@ -397,9 +442,7 @@ class _HomepageState extends State<Homepage>
                         const Text('+94 779038886',
                             style: TextStyle(color: Colors.blue)),
                         TextButton(
-                          onPressed: () {
-                            _showContactDialog;
-                          },
+                          onPressed: () => _showContactDialog(context),
                           child: const Text(
                             'Contact Us',
                             style: TextStyle(
@@ -583,7 +626,7 @@ final _formKey = GlobalKey<FormState>();
 String? selectedRole;
 String? selectbranches;
 User? user;
-//sing in function
+//sing up function
 Future<dynamic> singup() async {
   try {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -592,62 +635,7 @@ Future<dynamic> singup() async {
   } catch (e) {}
 }
 
-//sing in function
-Future<User?> Singin() async {
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  try {
-    UserCredential us_cred = await auth.signInWithEmailAndPassword(
-        email: singinemail.text, password: singinpass.text);
-    user = us_cred.user;
-    if (user != null) {}
-  } catch (e) {
-    print("error!!!");
-  }
-  return user;
-}
-
 //singup funtion
-
-/// display contactus button
-void _showContactDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Contact Us'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(Icons.phone),
-              title: Text('+94 779038886'),
-              subtitle: Text('Call us for any inquiries.'),
-            ),
-            ListTile(
-              leading: Icon(Icons.email),
-              title: Text('support@turbodrop.com'),
-              subtitle: Text('Email us your questions.'),
-            ),
-            ListTile(
-              leading: Icon(Icons.location_on),
-              title: Text('123 TurboDrop St.'),
-              subtitle: Text('Colombo, Sri Lanka'),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Close'),
-          ),
-        ],
-      );
-    },
-  );
-}
 
 //function of add courier services data
 
@@ -672,6 +660,7 @@ Future<void> addCourierData(
       // Set the data for the courier service document if it does not exist
       await collectionRef.doc(courierServicesdocid).set({
         'name': name,
+        'rating': 0,
         'user_counter': 0,
       });
     }
@@ -681,16 +670,25 @@ Future<void> addCourierData(
         collectionRef.doc(courierServicesdocid);
     CollectionReference branchesCollection =
         courierServiceDoc.collection('branches');
+    // Check if the branch already exists
+    QuerySnapshot querySnapshot = await branchesCollection
+        .where('email_address', isEqualTo: email)
+        .where('location_address', isEqualTo: locationAddress)
+        .where('phone_number', isEqualTo: phoneNumber)
+        .where('address', isEqualTo: address)
+        .get();
 
-    // Add data to the branches subcollection with a new document ID
-    await branchesCollection.add({
-      'email_address': email,
-      'location_address': locationAddress,
-      'phone_number': phoneNumber,
-      'address': address,
-    });
+    if (querySnapshot.docs.isEmpty) {
+      // Add data to the branches subcollection with a new document ID
+      await branchesCollection.add({
+        'email_address': email,
+        'location_address': locationAddress,
+        'phone_number': phoneNumber,
+        'address': address,
+      });
 
-    print('Courier service and branch data added successfully!');
+      print('Courier service and branch data added successfully!');
+    }
   } catch (e) {
     print('Error adding courier service and branch data: $e');
     // Handle any errors here
