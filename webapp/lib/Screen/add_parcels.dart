@@ -107,7 +107,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
               FirebaseFirestore.instance.collection('parcels');
           final parcelDoc =
               collectionRef.doc(_trackingNumberController.text.trim());
-         print( widget.getusername);
+
           await parcelDoc.set({
             'parcelholder': widget.getusername,
             'history': [
@@ -134,6 +134,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
           );
 
           _formKey.currentState!.reset();
+          _
           _clearControllers();
           setState(() {
             _selectedStatus = null;

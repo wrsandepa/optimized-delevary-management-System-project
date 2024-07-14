@@ -81,7 +81,7 @@ class _HomepageState extends State<Homepage>
             context,
             MaterialPageRoute(
                 builder: (context) => ParcelEntryScreen(
-                      getusername: _user_name,
+                      getusername: _user_name.text.trim(),
                     )));
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -428,7 +428,6 @@ class _HomepageState extends State<Homepage>
                             // Reset fields and close the drawer if needed
                             singinemail.clear();
                             singinpass.clear();
-                            _user_name.clear();
                           }
                           // Close the sign-in drawer
 
