@@ -77,8 +77,12 @@ class _HomepageState extends State<Homepage>
           email: singinemail.text, password: singinpass.text);
       user = us_cred.user;
       if (user != null) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ParcelEntryScreen()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ParcelEntryScreen(
+                      getusername: _user_name,
+                    )));
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             behavior: SnackBarBehavior.floating,
@@ -92,6 +96,23 @@ class _HomepageState extends State<Homepage>
       print("error!!!");
     }
     return user;
+  } // Check if the username exists in the courierServices collection
+
+  Future<bool> iscourierexist() async {
+    try {
+      DocumentReference courierDocRef = FirebaseFirestore.instance
+          .collection('courierServices')
+          .doc(_user_name.text);
+      DocumentSnapshot courierDocSnapshot = await courierDocRef.get();
+      if (courierDocSnapshot.exists) {
+        return courierDocSnapshot.exists;
+      }
+    } catch (e) {
+      print('$e');
+    }
+    ;
+
+    return false;
   }
 
   @override
@@ -384,15 +405,43 @@ class _HomepageState extends State<Homepage>
                           }
                         }),
                     const SizedBox(height: 16),
+                    TextFormField(
+                        controller: _user_name,
+                        decoration: const InputDecoration(
+                          labelText: 'Usename',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your Username';
+                          }
+                          return null;
+                        }),
+                    const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formkey1.currentState!.validate()) {
-                          Singin();
-                          singinemail.clear();
-                          singinpass.clear();
-                          Navigator.pop(context);
+                          bool courierExists = await iscourierexist();
+                          if (courierExists) {
+                            Singin();
+                            Navigator.pop(context);
+                            // Reset fields and close the drawer if needed
+                            singinemail.clear();
+                            singinpass.clear();
+                            _user_name.clear();
+                          }
+                          // Close the sign-in drawer
 
-                          ;
+                          else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                content: Text('Courier service does not exist'),
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         }
 
                         ;
@@ -621,6 +670,7 @@ final TextEditingController comfirm_username = TextEditingController();
 final TextEditingController phone_num = TextEditingController();
 final TextEditingController addres = TextEditingController();
 final TextEditingController branches = TextEditingController();
+final TextEditingController _user_name = TextEditingController();
 
 final _formKey = GlobalKey<FormState>();
 String? selectedRole;

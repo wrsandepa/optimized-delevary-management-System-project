@@ -1,5 +1,4 @@
 import 'package:app1/sreen/home.dart';
-import 'package:app1/sreen/ratingwindow.dart';
 import 'package:app1/sreen/singup.dart';
 import 'package:app1/sreen/tracking.dart';
 import 'package:flutter/material.dart';

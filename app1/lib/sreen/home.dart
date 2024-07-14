@@ -69,7 +69,9 @@ class _HomescreenState extends State<Homescreen> {
         );
         print('error!!!!!!!!!!!!');
       }
-    } catch (e) {}
+    } catch (e) {
+      print('$e');
+    }
   }
 
   @override

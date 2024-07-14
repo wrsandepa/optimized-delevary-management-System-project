@@ -77,7 +77,7 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
         historyLength1 = length;
       });
     } catch (e) {
-      print('error');
+      print('$e');
     }
   }
 

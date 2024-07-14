@@ -22,48 +22,59 @@ class _Rating_wState extends State<Rating_w> {
       // Get reference to the parcel document
       DocumentReference parcelRef =
           FirebaseFirestore.instance.collection('parcels').doc(parcelId);
-     
+
       // Get the parcel document
       DocumentSnapshot parcelSnapshot = await parcelRef.get();
 
       if (parcelSnapshot.exists) {
         var parcelData = parcelSnapshot.data() as Map<String, dynamic>;
-        String courierServiceId = parcelData[
-            'parcelholder']; // Assuming 'parcelHolder' contains the courier service ID
+        String? courierServiceId = parcelData['parcelholder'];
 
-        // Get reference to the courier service document
-        DocumentReference courierRef = FirebaseFirestore.instance
-            .collection('courierServices')
-            .doc(courierServiceId);
+        if (courierServiceId != null) {
+          // Get reference to the courier service document
+          DocumentReference courierRef = FirebaseFirestore.instance
+              .collection('courierServices')
+              .doc(courierServiceId);
 
-        // Get the current data of the courier service
-        DocumentSnapshot courierSnapshot = await courierRef.get();
+          // Get the current data of the courier service
+          DocumentSnapshot courierSnapshot = await courierRef.get();
 
-        if (courierSnapshot.exists) {
-          var courierData = courierSnapshot.data() as Map<String, dynamic>;
-          int userCounter = courierData['userCounter'];
-          double currentRating = courierData['rating'];
+          if (courierSnapshot.exists) {
+            var courierData = courierSnapshot.data() as Map<String, dynamic>;
+            int userCounter =
+                courierData['userCounter'] ?? 0; // Ensure default value if null
+            double currentRating =
+                courierData['rating'] ?? 0; // Ensure default value if null
 
-          // Calculate new rating
-          double newRating =
-              ((currentRating * userCounter) + userRating) / (userCounter + 1);
+            // Calculate new rating
+            double newRating = ((currentRating * userCounter) + userRating) /
+                (userCounter + 1);
 
-          // Update userCounter and rating in the document
-          await courierRef
-              .update({'userCounter': userCounter + 1, 'rating': newRating});
+            // Update userCounter and rating in the document
+            await courierRef
+                .update({'userCounter': userCounter + 1, 'rating': newRating});
 
-          // Show success snackbar
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Rating updated successfully.'),
-              backgroundColor: Colors.green,
-            ),
-          );
+            // Show success snackbar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Rating updated successfully.'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } else {
+            // Show error snackbar if the courier service does not exist
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Courier service does not exist.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         } else {
-          // Show error snackbar if the courier service does not exist
+          // Show error snackbar if the parcel holder is null
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Courier service does not exist.'),
+              content: Text('Parcel holder is null.'),
               backgroundColor: Colors.red,
             ),
           );
@@ -85,6 +96,7 @@ class _Rating_wState extends State<Rating_w> {
           backgroundColor: Colors.red,
         ),
       );
+      print('$e');
     }
   }
 
