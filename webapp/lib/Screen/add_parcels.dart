@@ -1,12 +1,12 @@
 import 'dart:math';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 // ignore: must_be_immutable
 class ParcelEntryScreen extends StatefulWidget {
-  ParcelEntryScreen({Key? key, required this.getusername}) : super(key: key);
+  const ParcelEntryScreen({super.key, required this.getusername});
   final dynamic getusername;
   @override
   _ParcelEntryScreenState createState() => _ParcelEntryScreenState();
@@ -134,7 +134,6 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
           );
 
           _formKey.currentState!.reset();
-          _
           _clearControllers();
           setState(() {
             _selectedStatus = null;
@@ -167,10 +166,26 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
   // delete parcel
   Future<dynamic> deleteparcel(String tracking) async {
     try {
-      CollectionReference colleref =
-          FirebaseFirestore.instance.collection('parcels');
-      DocumentReference docuref = colleref.doc(tracking);
-      await docuref.delete();
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('parcels')
+          .doc(tracking)
+          .get();
+      Map<String, dynamic> parcelData = doc.data() as Map<String, dynamic>;
+      if (parcelData['parcelholder'] == widget.getusername) {
+        CollectionReference colleref =
+            FirebaseFirestore.instance.collection('parcels');
+        DocumentReference docuref = colleref.doc(tracking);
+        await docuref.delete();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Does Not Access to delete !'),
+            duration: Duration(seconds: 5), // Adjust the duration as needed
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
       // ignore: avoid_print
       print(e);
@@ -214,7 +229,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
           const SnackBar(
             behavior: SnackBarBehavior.floating,
             content: Text('YOUR PARCEL HAS DELEVERY CVOMPLEATED !'),
-            duration: Duration(seconds: 3), // Adjust the duration as needed
+            duration: Duration(seconds: 5), // Adjust the duration as needed
             backgroundColor: Colors.green,
           ),
         );
@@ -264,7 +279,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                 TextButton(
                   child: const Text('Yes'),
                   onPressed: () {
-                    deleteparcel(_trackingNumberController.text.trim());
+                    deleteparcel(DeleteController.text.trim());
                     Navigator.of(context).pop();
                     DeleteController.clear();
                     _formKey_deleteparcel.currentState?.reset();
@@ -279,6 +294,87 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
       // ignore: avoid_print
       print(e);
     }
+  }
+
+// accesing timestamp with firbase
+  String _formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+  }
+
+  Future<void> Show_parcel_details(
+      BuildContext context, String parcelid) async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('parcels')
+          .doc(parcelid)
+          .get();
+      Map<String, dynamic> parcelData = doc.data() as Map<String, dynamic>;
+      if (parcelData['parcelholder'] == widget.getusername) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                  'Your Prarcel Tracking Number is :${trakingcontroller.text.trim()}'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.location_on),
+                    title: Text('destination :${parcelData['destination']}'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.access_time),
+                    title: Text(
+                        'lastupdate :${_formatTimestamp(parcelData['lastupdate'])}'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('parcelholder :${parcelData['parcelholder']}'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.account_circle),
+                    title: Text('receiverName :${parcelData['receiverName']}'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.phone),
+                    title:
+                        Text('receiverPhone :${parcelData['receiverPhone']}'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.location_on),
+                    title: Text('senderName :${parcelData['senderName']}'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.phone),
+                    title: Text('senderPhone :${parcelData['senderPhone']}'),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        _scaffoldKey.currentState!.closeDrawer();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Not permition to more details'),
+            duration: Duration(seconds: 4), // Adjust the duration as needed
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {}
   }
 
   @override
@@ -297,14 +393,16 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                 indicatorStyle: IndicatorStyle(
                   iconStyle: IconStyle(
                       iconData:
-                          historyLength1! >= 0 ? Icons.check : Icons.close,
+                          historyLength1! >= 1 ? Icons.check : Icons.close,
                       fontSize: 20),
-                  color: historyLength1! >= 0
+                  color: historyLength1! >= 1
                       ? Colors.orange
                       : const Color.fromARGB(255, 87, 65, 65),
                 ),
                 afterLineStyle: LineStyle(
-                  color: historyLength1! >= 0 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 2
+                      ? Colors.orange
+                      : Color.fromARGB(255, 87, 65, 65),
                 ),
                 isFirst: true,
               ),
@@ -316,15 +414,21 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                 indicatorStyle: IndicatorStyle(
                   iconStyle: IconStyle(
                       iconData:
-                          historyLength1! >= 1 ? Icons.check : Icons.close,
+                          historyLength1! >= 2 ? Icons.check : Icons.close,
                       fontSize: 20),
-                  color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 2
+                      ? Colors.orange
+                      : Color.fromARGB(255, 87, 65, 65),
                 ),
                 beforeLineStyle: LineStyle(
-                  color: historyLength1! >= 0 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 2
+                      ? Colors.orange
+                      : Color.fromARGB(255, 87, 65, 65),
                 ),
                 afterLineStyle: LineStyle(
-                  color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 3
+                      ? Colors.orange
+                      : Color.fromARGB(255, 87, 65, 65),
                 ),
               ),
               TimelineTile(
@@ -335,15 +439,21 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                 indicatorStyle: IndicatorStyle(
                   iconStyle: IconStyle(
                       iconData:
-                          historyLength1! >= 2 ? Icons.check : Icons.close,
+                          historyLength1! >= 3 ? Icons.check : Icons.close,
                       fontSize: 20),
-                  color: historyLength1! >= 2 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 3
+                      ? Colors.orange
+                      : Color.fromARGB(255, 87, 65, 65),
                 ),
                 beforeLineStyle: LineStyle(
-                  color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 3
+                      ? Colors.orange
+                      : Color.fromARGB(255, 87, 65, 65),
                 ),
                 afterLineStyle: LineStyle(
-                  color: historyLength1! >= 2 ? Colors.orange : Colors.white,
+                  color: historyLength1! >= 4
+                      ? Colors.orange
+                      : Color.fromARGB(255, 87, 65, 65),
                 ),
               ),
               TimelineTile(
@@ -355,23 +465,35 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                 indicatorStyle: IndicatorStyle(
                   iconStyle: IconStyle(
                       iconData:
-                          historyLength1! >= 3 ? Icons.check : Icons.close,
+                          historyLength1! == 4 ? Icons.check : Icons.close,
                       fontSize: 20),
-                  color: historyLength1! >= 3
+                  color: historyLength1! == 4
                       ? Colors.orange
-                      : const Color.fromARGB(255, 145, 135, 135),
+                      : const Color.fromARGB(255, 87, 65, 65),
                 ),
                 beforeLineStyle: LineStyle(
-                  color: historyLength1! >= 2
+                  color: historyLength1! == 4
                       ? Colors.orange
-                      : const Color.fromARGB(255, 145, 135, 135),
-                ),
-                afterLineStyle: LineStyle(
-                  color: historyLength1! >= 3
-                      ? Colors.orange
-                      : Color.fromARGB(255, 199, 17, 17),
+                      : const Color.fromARGB(255, 87, 65, 65),
                 ),
               ),
+              const SizedBox(
+                height: 50,
+              ),
+              TextButton(
+                  onPressed: () {
+                    Show_parcel_details(context, trakingcontroller.text.trim());
+                    _scaffoldKey.currentState!.closeDrawer();
+                  },
+                  child: const Text(
+                    'More details',
+                    style: TextStyle(color: Colors.blue),
+                  ))
+            ] else ...[
+              const SizedBox(
+                height: 50,
+              ),
+              Text('No More tracking Details')
             ]
           ],
         ),

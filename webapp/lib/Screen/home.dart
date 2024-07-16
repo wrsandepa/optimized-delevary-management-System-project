@@ -68,35 +68,92 @@ class _HomepageState extends State<Homepage>
   late AnimationController _controller;
   late Animation<Offset> _animation;
 
-//sing in function
-  Future<User?> Singin() async {
+// Sign in function
+  Future<User?> signIn() async {
     FirebaseAuth auth = FirebaseAuth.instance;
 
     try {
-      UserCredential us_cred = await auth.signInWithEmailAndPassword(
-          email: singinemail.text, password: singinpass.text);
-      user = us_cred.user;
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: singinemail.text.trim(), password: singinpass.text.trim());
+
+      User? user = userCredential.user;
+
       if (user != null) {
-        Navigator.push(
+        // Retrieve the username associated with the signed-in user
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        Map<String, dynamic> userdata = userDoc.data() as Map<String, dynamic>;
+
+        // Check if the username matches the username entered during sign-in
+        if (userdata['username'] == _user_name.text.trim()) {
+          Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ParcelEntryScreen(
-                      getusername: _user_name.text.trim(),
-                    )));
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text('Successfully'),
-            duration: Duration(seconds: 3), // Adjust the duration as needed
-            backgroundColor: Colors.green,
-          ),
-        );
+              builder: (context) => ParcelEntryScreen(
+                getusername: _user_name.text.trim(),
+              ),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text('Successfully signed in'),
+              duration: Duration(seconds: 3),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(
+                  'Username does not match. Please check your credentials.'),
+              duration: Duration(seconds: 3),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+
+      return user;
+    } catch (e) {
+      print("Sign in error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Sign-in failed. Please try again.'),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return null;
+    }
+  }
+
+  //sing up function
+  Future<User?> singup() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: singupemail.text, password: singuppass.text);
+
+      print('hiii');
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Store the username in Firestore
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'username': username.text,
+          'email': singupemail.text.trim(),
+        });
       }
     } catch (e) {
-      print("error!!!");
+      print('$e');
     }
-    return user;
-  } // Check if the username exists in the courierServices collection
+  }
+  // Check if the username exists in the courierServices collection
 
   Future<bool> iscourierexist() async {
     try {
@@ -110,7 +167,6 @@ class _HomepageState extends State<Homepage>
     } catch (e) {
       print('$e');
     }
-    ;
 
     return false;
   }
@@ -166,6 +222,7 @@ class _HomepageState extends State<Homepage>
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
                       }
+                      return null;
                     },
                     controller: singupemail,
                     decoration: const InputDecoration(
@@ -179,6 +236,7 @@ class _HomepageState extends State<Homepage>
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
                       }
+                      return null;
                     },
                     controller: singuppass,
                     decoration: const InputDecoration(
@@ -196,6 +254,7 @@ class _HomepageState extends State<Homepage>
                       if (value != singuppass.text) {
                         return 'Does not match your password';
                       }
+                      return null;
                     },
                     controller: comfirmsinguppass,
                     decoration: const InputDecoration(
@@ -210,6 +269,7 @@ class _HomepageState extends State<Homepage>
                       if (value == null || value.isEmpty) {
                         return 'Re type  username';
                       }
+                      return null;
                     },
                     controller: username,
                     decoration: const InputDecoration(
@@ -226,6 +286,7 @@ class _HomepageState extends State<Homepage>
                       if (value != username.text) {
                         return 'Does not match your usrname';
                       }
+                      return null;
                     },
                     controller: comfirm_username,
                     decoration: const InputDecoration(
@@ -240,6 +301,7 @@ class _HomepageState extends State<Homepage>
                           value?.length != 10) {
                         return 'enter phone number';
                       }
+                      return null;
                     },
                     controller: phone_num,
                     decoration: const InputDecoration(
@@ -253,6 +315,7 @@ class _HomepageState extends State<Homepage>
                       if (value == null || value.isEmpty) {
                         return 'enter Address';
                       }
+                      return null;
                     },
                     controller: addres,
                     decoration: const InputDecoration(
@@ -325,7 +388,6 @@ class _HomepageState extends State<Homepage>
                             phone_num.text,
                             addres.text); //String name,
 
-                        singupemail.clear();
                         singuppass.clear();
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -390,6 +452,7 @@ class _HomepageState extends State<Homepage>
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
+                          return null;
                         }),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -403,6 +466,7 @@ class _HomepageState extends State<Homepage>
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           }
+                          return null;
                         }),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -423,15 +487,14 @@ class _HomepageState extends State<Homepage>
                         if (_formkey1.currentState!.validate()) {
                           bool courierExists = await iscourierexist();
                           if (courierExists) {
-                            Singin();
+                            signIn(); // Reset fields and close the drawer if needed
                             Navigator.pop(context);
-                            // Reset fields and close the drawer if needed
                             singinemail.clear();
                             singinpass.clear();
-                          }
-                          // Close the sign-in drawer
-
-                          else {
+                          } else {
+                            Navigator.pop(context);
+                            singinemail.clear();
+                            singinpass.clear();
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 behavior: SnackBarBehavior.floating,
@@ -675,16 +738,6 @@ final _formKey = GlobalKey<FormState>();
 String? selectedRole;
 String? selectbranches;
 User? user;
-//sing up function
-Future<dynamic> singup() async {
-  try {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: singupemail.text, password: singuppass.text);
-    print('hiii');
-  } catch (e) {}
-}
-
-//singup funtion
 
 //function of add courier services data
 
@@ -710,7 +763,6 @@ Future<void> addCourierData(
       await collectionRef.doc(courierServicesdocid).set({
         'name': name,
         'rating': 0,
-        'user_counter': 0,
       });
     }
 

@@ -49,9 +49,9 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
         String confirmationStatus = data['confirmation'];
         delivered1 = (confirmationStatus == 'delivered');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text('YOUR PARCEL HAS DELEVERY CVOMPLEATED !'),
+            content: Text('YOUR PARCEL HAS DELEVERY COMPLEATED !'),
             duration: Duration(seconds: 3), // Adjust the duration as needed
             backgroundColor: Colors.green,
           ),
@@ -178,14 +178,14 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                   indicatorStyle: IndicatorStyle(
                     iconStyle: IconStyle(
                         iconData:
-                            historyLength1! >= 0 ? Icons.check : Icons.close,
+                            historyLength1! >= 1 ? Icons.check : Icons.close,
                         fontSize: 20),
-                    color: historyLength1! >= 0
+                    color: historyLength1! >= 1
                         ? Colors.orange
                         : const Color.fromARGB(255, 87, 65, 65),
                   ),
                   afterLineStyle: LineStyle(
-                    color: historyLength1! >= 0 ? Colors.orange : Colors.white,
+                    color: historyLength1! >= 2 ? Colors.orange : Color.fromARGB(255, 87, 65, 65),
                   ),
                   isFirst: true,
                 ),
@@ -197,15 +197,15 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                   indicatorStyle: IndicatorStyle(
                     iconStyle: IconStyle(
                         iconData:
-                            historyLength1! >= 1 ? Icons.check : Icons.close,
+                            historyLength1! >= 2 ? Icons.check : Icons.close,
                         fontSize: 20),
-                    color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                    color: historyLength1! >= 2 ? Colors.orange :  Color.fromARGB(255, 87, 65, 65),
                   ),
                   beforeLineStyle: LineStyle(
-                    color: historyLength1! >= 0 ? Colors.orange : Colors.white,
+                    color: historyLength1! >= 2? Colors.orange : Color.fromARGB(255, 87, 65, 65),
                   ),
                   afterLineStyle: LineStyle(
-                    color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                    color: historyLength1! >= 3? Colors.orange : Color.fromARGB(255, 87, 65, 65),
                   ),
                 ),
                 TimelineTile(
@@ -216,15 +216,15 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                   indicatorStyle: IndicatorStyle(
                     iconStyle: IconStyle(
                         iconData:
-                            historyLength1! >= 2 ? Icons.check : Icons.close,
+                            historyLength1! >= 3? Icons.check : Icons.close,
                         fontSize: 20),
-                    color: historyLength1! >= 2 ? Colors.orange : Colors.white,
+                    color: historyLength1! >= 3? Colors.orange : Color.fromARGB(255, 87, 65, 65),
                   ),
                   beforeLineStyle: LineStyle(
-                    color: historyLength1! >= 1 ? Colors.orange : Colors.white,
+                    color: historyLength1! >= 3 ? Colors.orange :  Color.fromARGB(255, 87, 65, 65),
                   ),
                   afterLineStyle: LineStyle(
-                    color: historyLength1! >= 2 ? Colors.orange : Colors.white,
+                    color: historyLength1! >= 4 ? Colors.orange :  Color.fromARGB(255, 87, 65, 65),
                   ),
                 ),
                 TimelineTile(
@@ -236,22 +236,18 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                   indicatorStyle: IndicatorStyle(
                     iconStyle: IconStyle(
                         iconData:
-                            historyLength1! >= 3 ? Icons.check : Icons.close,
+                            historyLength1! == 4 ? Icons.check : Icons.close,
                         fontSize: 20),
-                    color: historyLength1! >= 3
+                    color: historyLength1! == 4
                         ? Colors.orange
-                        : const Color.fromARGB(255, 145, 135, 135),
+                        :  Color.fromARGB(255, 87, 65, 65),
                   ),
                   beforeLineStyle: LineStyle(
-                    color: historyLength1! >= 2
+                    color: historyLength1! == 4
                         ? Colors.orange
-                        : Color.fromARGB(255, 145, 135, 135),
+                        :  Color.fromARGB(255, 87, 65, 65),
                   ),
-                  afterLineStyle: LineStyle(
-                    color: historyLength1! >= 3
-                        ? Colors.orange
-                        : Color.fromARGB(255, 199, 17, 17),
-                  ),
+                  
                 ),
               ] else ...[
                 SizedBox(
