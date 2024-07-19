@@ -228,7 +228,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text('YOUR PARCEL HAS DELEVERY CVOMPLEATED !'),
+            content: Text('YOUR PARCEL HAS DELEVERY COMPLEATED !'),
             duration: Duration(seconds: 5), // Adjust the duration as needed
             backgroundColor: Colors.green,
           ),
