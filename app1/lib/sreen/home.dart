@@ -1,42 +1,159 @@
+import 'dart:io' show Platform, File; // Import 'dart:io' safely
+
 import 'package:app1/service/display_efficiancy_curior.dart';
 import 'package:app1/sreen/ratingwindow.dart';
 import 'package:app1/sreen/tracking.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Homescreen extends StatefulWidget {
-  const Homescreen({super.key});
+  final dynamic user1;
+  const Homescreen({super.key, required this.user1});
 
   @override
   State<Homescreen> createState() => _HomescreenState();
 }
 
 final TextEditingController _confirmok = TextEditingController();
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+final GlobalKey<ScaffoldState> _enddrawerkey = GlobalKey<ScaffoldState>();
+XFile? _imageFile; // To store the selected image file
 
 class _HomescreenState extends State<Homescreen> {
-  // the function use in hear snackbar is must define under scaffold
+  late dynamic user1;
+  final ImagePicker _imagePicker = ImagePicker();
+  String? _downloadURL;
+  String? _imageUrl; // To store the download URL
+  Future<void> _pickImage() async {
+    try {
+      XFile? pickedFile =
+          await _imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        if (kIsWeb) {
+          await _uploadImageWeb(pickedFile);
+        } else {
+          await _uploadImageMobile(File(pickedFile.path));
+        }
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error picking image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _uploadImageMobile(File image) async {
+    try {
+      Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      UploadTask uploadTask = storageRef.putFile(image);
+
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+      setState(() {
+        _downloadURL = downloadURL;
+      }); // Update Firestore with the new image URL
+      await FirebaseFirestore.instance
+          .collection('userapp')
+          .doc(user1.uid)
+          .update({"imageurl": _downloadURL});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Upload successful.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      print('File uploaded successfully. Download URL: $downloadURL');
+    } catch (e) {
+      print('Error uploading image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error uploading image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _uploadImageWeb(XFile image) async {
+    try {
+      Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      UploadTask uploadTask = storageRef.putData(await image.readAsBytes());
+
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+      setState(() {
+        _downloadURL = downloadURL;
+      }); // Update Firestore with the new image URL
+      await FirebaseFirestore.instance
+          .collection('userapp')
+          .doc(user1.uid)
+          .update({"imageurl": _downloadURL});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Upload successful.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      print('File uploaded successfully. Download URL: $downloadURL');
+    } catch (e) {
+      print('Error uploading image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error uploading image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('userapp')
+          .doc(user1.uid)
+          .get();
+      if (userDoc.exists) {
+        setState(() {
+          _imageUrl = userDoc['imageurl'];
+        });
+      }
+      print('_fetchUserData is: ${ _imageUrl}')
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
+
   Future<void> updateParcelConfirmation(String parcelId) async {
     try {
-      // Get reference to the parcel document
       DocumentReference parcelRef =
           FirebaseFirestore.instance.collection('parcels').doc(parcelId);
-      // Check if the document exists
       DocumentSnapshot snapshot = await parcelRef.get();
       if (snapshot.exists) {
-        // Update the confirmation field to 'delivered'
         var data = snapshot.data() as Map<String, dynamic>;
         if (data['confirmation'] != 'delivered') {
           await parcelRef.update({
             'confirmation': 'delivered',
             'confirmationTime': FieldValue.serverTimestamp()
           });
-          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
-            // Show success snackbar
             const SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text('Parcel marked as delivered.'),
-              duration: Duration(seconds: 3), // Adjust the duration as needed
+              duration: Duration(seconds: 3),
               backgroundColor: Colors.green,
             ),
           );
@@ -48,17 +165,15 @@ class _HomescreenState extends State<Homescreen> {
                       )));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            // Show success snackbar
             const SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text('Parcel already marked as delivered.'),
-              duration: Duration(seconds: 3), // Adjust the duration as needed
+              duration: Duration(seconds: 3),
               backgroundColor: Colors.green,
             ),
           );
         }
       } else {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             behavior: SnackBarBehavior.floating,
@@ -75,24 +190,144 @@ class _HomescreenState extends State<Homescreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    user1 = widget.user1;
+    _fetchUserData();
+  }
+
+  Widget _enddrawer(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 30.0,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: _pickImage,
+                    child: CircleAvatar(
+                      radius: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              // Handle settings tap
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () {
+              // Handle logout tap
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-          title: const Text(
-            'Menu!',
-          ),
-          backgroundColor: Colors.orange),
+        automaticallyImplyLeading: false,
+        title: const Text('Menu'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+            icon: const Icon(Icons.account_circle),
+            iconSize: 35,
+          )
+        ],
+        backgroundColor: Colors.orange,
+      ),
       bottomNavigationBar: const BottomAppBar(
         height: 60,
         color: Colors.orange,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage('assets1/annimation/pic.jpg'),
+      endDrawer: _enddrawer(context), // Set the end drawer here
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(color: Colors.amberAccent),
+              accountName: const Text('User Name',
+                  style: TextStyle(
+                      color: Colors.black)), // Replace with actual user name
+              accountEmail: const Text('user@example.com',
+                  style: TextStyle(
+                      color: Colors.black)), // Replace with actual user email
+           currentAccountPicture: CircleAvatar(
+  backgroundColor: Colors.white,
+  child: _imageUrl != null
+      ? ClipOval(
+          child: Image.network(
+            _imageUrl!, // Use _imageUrl here
+            width: 100.0,
+            height: 100.0,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              print('Error loading image: $error');
+              print('Stack trace: $stackTrace');
+              return const Icon(
+                Icons.error,
+                size: 50,
+                color: Colors.red,
+              );
+            },
           ),
+        )
+      : const Text(
+          "U", // Display the first letter of the user name
+          style: TextStyle(fontSize: 40.0),
         ),
+),
+,
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                _scaffoldKey.currentState?.openEndDrawer();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                // Handle settings tap
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                // Handle logout tap
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Container(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 100, 20, 50),
@@ -130,9 +365,7 @@ class _HomescreenState extends State<Homescreen> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 60,
-                ),
+                const SizedBox(height: 60),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -164,9 +397,7 @@ class _HomescreenState extends State<Homescreen> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
+                const SizedBox(height: 50),
                 GestureDetector(
                   onTap: () {
                     showDialog(

@@ -1,5 +1,4 @@
 import 'dart:js_interop';
-import 'dart:ui';
 
 import 'package:app1/sreen/dashboard.dart';
 import 'package:app1/sreen/home.dart';
@@ -31,22 +30,32 @@ class _Display_curior_serState extends State<Display_curior_ser> {
         backgroundColor: Colors.orange,
       ),
       drawer: Drawer(
-        backgroundColor: Colors.amber,
         child: ListView(
           children: [
-            DrawerHeader(child: Text("LOGO")),
+            Container(
+              height: 00,
+              width: 50,
+              decoration: const BoxDecoration(
+                  color: Colors.amber,
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          'assets1/annimation/Thunderdrop-full-logo.png'),
+                      fit: BoxFit.contain)),
+            ),
             GestureDetector(
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Homescreen()));
+                          builder: (context) => const Homescreen(
+                                user1: null,
+                              )));
                 },
-                child: Icon(Icons.home)),
+                child: const Icon(Icons.home)),
             ListTile(
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                   vertical: 10.0, horizontal: 16.0), // Add padding here
-              title: Text('Dashboard'),
+              title: const Text('Dashboard'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -59,22 +68,22 @@ class _Display_curior_serState extends State<Display_curior_ser> {
               },
             ),
             ListTile(
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                   vertical: 10.0, horizontal: 16.0), // Add padding here
-              title: Text('Tracking'),
+              title: const Text('Tracking'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Trackingmyparcel(),
+                      builder: (context) => const Trackingmyparcel(),
                     ));
               },
             ),
             ListTile(
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                   vertical: 10.0, horizontal: 16.0), // Add padding here
-              title: Text('Logout'),
+              title: const Text('Logout'),
               onTap: () {},
             )
           ],
@@ -92,11 +101,11 @@ class _Display_curior_serState extends State<Display_curior_ser> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(50),
+          padding: const EdgeInsets.all(50),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -186,7 +195,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                     future: _futureCourierServices,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
@@ -332,7 +341,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
         .collection('courierServices')
         .orderBy('rating',
             descending: true) // Example: order by descending rating
-        .limit(5) // Limit to top 2 efficient services
+        .limit(20) // Limit to top 2 efficient services
         .get();
 
     for (var courierServiceDoc in querySnapshot.docs) {

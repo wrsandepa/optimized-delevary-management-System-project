@@ -14,6 +14,8 @@ class _LogingState extends State<Loging> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
+  final TextEditingController username_log = TextEditingController();
+
   //login fucltion
   Future<User?> Singin() async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,7 +27,7 @@ class _LogingState extends State<Loging> {
       if (user != null) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Homescreen()),
+          MaterialPageRoute(builder: (context) => Homescreen(user1: user)),
         );
       }
     } catch (e) {
@@ -97,6 +99,23 @@ class _LogingState extends State<Loging> {
                 decoration: InputDecoration(
                     label: const Text(
                       'Password',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25))),
+                obscureText: true, // This will obscure the text with star marks
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 400,
+              child: TextFormField(
+                controller: username_log,
+                decoration: InputDecoration(
+                    label: const Text(
+                      'username',
                       style: TextStyle(
                         color: Colors.blue,
                       ),

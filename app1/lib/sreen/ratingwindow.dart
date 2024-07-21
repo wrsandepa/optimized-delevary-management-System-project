@@ -167,7 +167,9 @@ class _Rating_wState extends State<Rating_w> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Homescreen()));
+                          builder: (context) => const Homescreen(
+                                user1: null,
+                              )));
                 }
               },
               child: const Text(
