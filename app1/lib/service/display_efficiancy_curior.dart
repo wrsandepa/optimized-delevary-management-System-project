@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:app1/sreen/dashboard.dart';
 import 'package:app1/sreen/home.dart';
 import 'package:app1/sreen/tracking.dart';

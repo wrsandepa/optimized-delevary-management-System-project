@@ -131,7 +131,7 @@ class _HomescreenState extends State<Homescreen> {
           _imageUrl = userDoc['imageurl'];
         });
       }
-      print('_fetchUserData is: ${ _imageUrl}')
+      print('_fetchUserData is: ${_imageUrl}');
     } catch (e) {
       print('Error fetching user data: $e');
     }
@@ -276,32 +276,31 @@ class _HomescreenState extends State<Homescreen> {
               accountEmail: const Text('user@example.com',
                   style: TextStyle(
                       color: Colors.black)), // Replace with actual user email
-           currentAccountPicture: CircleAvatar(
-  backgroundColor: Colors.white,
-  child: _imageUrl != null
-      ? ClipOval(
-          child: Image.network(
-            _imageUrl!, // Use _imageUrl here
-            width: 100.0,
-            height: 100.0,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              print('Error loading image: $error');
-              print('Stack trace: $stackTrace');
-              return const Icon(
-                Icons.error,
-                size: 50,
-                color: Colors.red,
-              );
-            },
-          ),
-        )
-      : const Text(
-          "U", // Display the first letter of the user name
-          style: TextStyle(fontSize: 40.0),
-        ),
-),
-,
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: _imageUrl != null
+                    ? ClipOval(
+                        child: Image.network(
+                          _imageUrl!, // Use _imageUrl here
+                          width: 100.0,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            print('Error loading image: $error');
+                            print('Stack trace: $stackTrace');
+                            return const Icon(
+                              Icons.error,
+                              size: 50,
+                              color: Colors.red,
+                            );
+                          },
+                        ),
+                      )
+                    : const Text(
+                        "U", // Display the first letter of the user name
+                        style: TextStyle(fontSize: 40.0),
+                      ),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.person),
