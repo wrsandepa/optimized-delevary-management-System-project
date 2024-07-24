@@ -27,6 +27,9 @@ class _HomescreenState extends State<Homescreen> {
   final ImagePicker _imagePicker = ImagePicker();
   String? _downloadURL;
   String? _imageUrl; // To store the download URL
+  String? _userN; // To store the user username
+  String? _email; // To store the email
+
   Future<void> _pickImage() async {
     try {
       XFile? pickedFile =
@@ -38,6 +41,7 @@ class _HomescreenState extends State<Homescreen> {
         } else {
           await _uploadImageMobile(File(pickedFile.path));
         }
+        _fetchUserData();
       }
     } catch (e) {
       print('Error picking image: $e');
@@ -129,6 +133,8 @@ class _HomescreenState extends State<Homescreen> {
       if (userDoc.exists) {
         setState(() {
           _imageUrl = userDoc['imageurl'];
+          _userN = userDoc['username'];
+          _email = userDoc['email'];
         });
       }
       print('_fetchUserData is: ${_imageUrl}');
@@ -205,7 +211,7 @@ class _HomescreenState extends State<Homescreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 30.0,
                 ),
                 Positioned(
@@ -213,8 +219,9 @@ class _HomescreenState extends State<Homescreen> {
                   right: 0,
                   child: GestureDetector(
                     onTap: _pickImage,
-                    child: CircleAvatar(
+                    child: const CircleAvatar(
                       radius: 12,
+                      child: Icon(Icons.add_a_photo),
                     ),
                   ),
                 ),
@@ -270,11 +277,11 @@ class _HomescreenState extends State<Homescreen> {
           children: <Widget>[
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(color: Colors.amberAccent),
-              accountName: const Text('User Name',
-                  style: TextStyle(
+              accountName: Text('$_userN',
+                  style: const TextStyle(
                       color: Colors.black)), // Replace with actual user name
-              accountEmail: const Text('user@example.com',
-                  style: TextStyle(
+              accountEmail: Text('$_email',
+                  style: const TextStyle(
                       color: Colors.black)), // Replace with actual user email
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,

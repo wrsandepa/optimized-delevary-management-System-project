@@ -182,7 +182,7 @@ class _SingupageState extends State<Singupage> {
                         child: const Text(
                           'singup',
                           style:
-                              TextStyle(color: Colors.blueGrey, fontSize: 18),
+                              TextStyle(color: Colors.blueGrey, fontSize: 15),
                         ),
                       ),
                     ]),
