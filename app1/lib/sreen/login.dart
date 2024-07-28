@@ -1,3 +1,4 @@
+import 'package:app1/service/forgetpassword.dart';
 import 'package:app1/sreen/home.dart';
 import 'package:app1/sreen/singup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ class _LogingState extends State<Loging> {
   final TextEditingController username_log = TextEditingController();
 
   final _formkey = GlobalKey<FormState>();
+  final forgetpassword_bottom_sheet = GlobalKey<FormState>();
 
   //login fucltion
   Future<User?> Singin() async {
@@ -45,7 +47,7 @@ class _LogingState extends State<Loging> {
         }
       }
     } catch (e) {
-      print("error!!!");
+      print('$e');
     }
     return user;
   }
@@ -67,6 +69,69 @@ class _LogingState extends State<Loging> {
     }
 
     return null;
+  }
+
+  void _showForgotPasswordBottomSheet() {
+    final TextEditingController _forgotPasswordEmailController =
+        TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: forgetpassword_bottom_sheet,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text(
+                  'Forgot Password',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _forgotPasswordEmailController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter your email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (forgetpassword_bottom_sheet.currentState!.validate()) {
+                      String email = _forgotPasswordEmailController.text.trim();
+
+                      await sendPasswordResetEmail(email, context);
+                      Navigator.of(context)
+                          .pop(); // Close the bottom sheet after sending the email
+                    } else {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter your email.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Send'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -100,7 +165,7 @@ class _LogingState extends State<Loging> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: NetworkImage('assets1/annimation/2147981654.jpg'),
                     fit: BoxFit.cover,
                   ),
@@ -206,6 +271,17 @@ class _LogingState extends State<Loging> {
                             'already haven`t account',
                             style:
                                 TextStyle(color: Colors.blueGrey, fontSize: 15),
+                          ),
+                        ),
+                        const SizedBox(height: 25),
+                        TextButton(
+                          onPressed: () {
+                            _showForgotPasswordBottomSheet();
+                          },
+                          child: const Text(
+                            'forget password',
+                            style:
+                                TextStyle(color: Colors.blueGrey, fontSize: 14),
                           ),
                         ),
                       ]),

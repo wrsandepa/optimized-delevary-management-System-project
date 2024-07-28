@@ -1,13 +1,14 @@
+import 'package:app1/service/singout.dart';
 import 'package:app1/sreen/dashboard.dart';
 import 'package:app1/sreen/home.dart';
 import 'package:app1/sreen/tracking.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
 class Display_curior_ser extends StatefulWidget {
-  const Display_curior_ser({super.key});
+  final dynamic user2;
+  const Display_curior_ser({super.key, required this.user2});
 
   @override
   State<Display_curior_ser> createState() => _Display_curior_serState();
@@ -17,6 +18,12 @@ class _Display_curior_serState extends State<Display_curior_ser> {
   final TextEditingController home_town = TextEditingController();
   Future<List<Map<String, dynamic>>>? _futureCourierServices;
   List<Map<String, dynamic>> courierServices1 = [];
+  late dynamic user2;
+  @override
+  void initState() {
+    super.initState();
+    user2 = widget.user2;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +52,8 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Homescreen(
-                                user1: null,
+                          builder: (context) => Homescreen(
+                                user1: user2,
                               )));
                 },
                 child: const Icon(Icons.home)),
@@ -82,7 +89,9 @@ class _Display_curior_serState extends State<Display_curior_ser> {
               contentPadding: const EdgeInsets.symmetric(
                   vertical: 10.0, horizontal: 16.0), // Add padding here
               title: const Text('Logout'),
-              onTap: () {},
+              onTap: () {
+                signOut(context);
+              },
             )
           ],
         ),

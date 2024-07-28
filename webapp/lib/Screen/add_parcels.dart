@@ -26,6 +26,8 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
   final TextEditingController _recPhoneController = TextEditingController();
   final TextEditingController _senNameController = TextEditingController();
   final TextEditingController _recNameController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
   final TextEditingController DeleteController = TextEditingController();
   final TextEditingController trakingcontroller = TextEditingController();
 
@@ -120,6 +122,8 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
             'receiverPhone': _recPhoneController.text.trim(),
             'senderName': _senNameController.text.trim(),
             'receiverName': _recNameController.text.trim(),
+            'weight': weightController.text.trim(),
+            'price': priceController.text.trim(),
             'lastupdate': FieldValue.serverTimestamp(),
           });
 
@@ -314,52 +318,56 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                  'Your Prarcel Tracking Number is :${trakingcontroller.text.trim()}'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.location_on),
-                    title: Text('destination :${parcelData['destination']}'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.access_time),
-                    title: Text(
-                        'lastupdate :${_formatTimestamp(parcelData['lastupdate'])}'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text('parcelholder :${parcelData['parcelholder']}'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text('receiverName :${parcelData['receiverName']}'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.phone),
-                    title:
-                        Text('receiverPhone :${parcelData['receiverPhone']}'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.location_on),
-                    title: Text('senderName :${parcelData['senderName']}'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.phone),
-                    title: Text('senderPhone :${parcelData['senderPhone']}'),
+            return SingleChildScrollView(
+              child: AlertDialog(
+                title: Text(
+                    'Your Prarcel Tracking Number is :${trakingcontroller.text.trim()}'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.location_on),
+                      title: Text('destination :${parcelData['destination']}'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.access_time),
+                      title: Text(
+                          'lastupdate :${_formatTimestamp(parcelData['lastupdate'])}'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.person),
+                      title:
+                          Text('parcelholder :${parcelData['parcelholder']}'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.account_circle),
+                      title:
+                          Text('receiverName :${parcelData['receiverName']}'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.phone),
+                      title:
+                          Text('receiverPhone :${parcelData['receiverPhone']}'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.location_on),
+                      title: Text('senderName :${parcelData['senderName']}'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.phone),
+                      title: Text('senderPhone :${parcelData['senderPhone']}'),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Close'),
                   ),
                 ],
               ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Close'),
-                ),
-              ],
             );
           },
         );
@@ -587,6 +595,40 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                                               _trackingNumberController.text
                                                   .trim());
                                         },
+                                      ),
+                                      const SizedBox(height: 8),
+                                      TextFormField(
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please Enter weight of parcel';
+                                          }
+                                          return null;
+                                        },
+                                        controller: weightController,
+                                        decoration: InputDecoration(
+                                          labelText: 'weight',
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      TextFormField(
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please Enter price';
+                                          }
+                                          return null;
+                                        },
+                                        controller: priceController,
+                                        decoration: InputDecoration(
+                                          labelText: 'price',
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
                                       ),
                                       const SizedBox(height: 8),
                                       DropdownButtonFormField<String>(

@@ -7,7 +7,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Rating_w extends StatefulWidget {
   final dynamic parcelId_pass;
-  const Rating_w({super.key, required this.parcelId_pass});
+  final dynamic user3;
+  const Rating_w({super.key, required this.parcelId_pass, required this.user3});
 
   @override
   State<Rating_w> createState() => _Rating_wState();
@@ -117,7 +118,7 @@ class _Rating_wState extends State<Rating_w> {
           onRatingUpdate: (value) {
             print(Rating);
             setState(() {
-              this.Rating = value;
+              Rating = value;
             });
           },
         ),
@@ -167,9 +168,16 @@ class _Rating_wState extends State<Rating_w> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Homescreen(
-                                user1: null,
+                          builder: (context) => Homescreen(
+                                user1: widget.user3,
                               )));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('No rating added try again!'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
               },
               child: const Text(

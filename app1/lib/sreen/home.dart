@@ -1,8 +1,11 @@
 import 'dart:io' show Platform, File; // Import 'dart:io' safely
 
 import 'package:app1/service/display_efficiancy_curior.dart';
+import 'package:app1/service/singout.dart';
+import 'package:app1/sreen/login.dart';
 import 'package:app1/sreen/ratingwindow.dart';
 import 'package:app1/sreen/tracking.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +140,8 @@ class _HomescreenState extends State<Homescreen> {
           _email = userDoc['email'];
         });
       }
-      print('_fetchUserData is: ${_imageUrl}');
+      _scaffoldKey.currentState?.closeEndDrawer();
+      print('_fetchUserData is: $_imageUrl');
     } catch (e) {
       print('Error fetching user data: $e');
     }
@@ -168,6 +172,7 @@ class _HomescreenState extends State<Homescreen> {
               MaterialPageRoute(
                   builder: (context) => Rating_w(
                         parcelId_pass: _confirmok.text,
+                        user3: user1,
                       )));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -199,6 +204,7 @@ class _HomescreenState extends State<Homescreen> {
   void initState() {
     super.initState();
     user1 = widget.user1;
+
     _fetchUserData();
   }
 
@@ -241,6 +247,7 @@ class _HomescreenState extends State<Homescreen> {
             title: const Text('Logout'),
             onTap: () {
               // Handle logout tap
+              signOut(context);
             },
           ),
         ],
@@ -329,6 +336,7 @@ class _HomescreenState extends State<Homescreen> {
                 title: const Text('Logout'),
                 onTap: () {
                   // Handle logout tap
+                  signOut(context);
                 },
               ),
             ],
@@ -379,7 +387,7 @@ class _HomescreenState extends State<Homescreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const Display_curior_ser()));
+                                  Display_curior_ser(user2: user1)));
                     },
                     child: Container(
                       width: double.infinity,

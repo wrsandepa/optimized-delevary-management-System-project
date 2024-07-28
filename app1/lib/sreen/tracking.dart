@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class Trackingmyparcel extends StatefulWidget {
@@ -79,6 +79,83 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
     } catch (e) {
       print('$e');
     }
+  }
+
+  // accesing timestamp with firbase
+  String _formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+  }
+
+  Future<void> Show_parcel_details(
+      BuildContext context, String parcelid) async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('parcels')
+          .doc(parcelid)
+          .get();
+      Map<String, dynamic> parcelData = doc.data() as Map<String, dynamic>;
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+                'Your Prarcel Tracking Number is :${_traking_num.text.trim()}'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: Icon(Icons.location_on),
+                  title: Text('destination :${parcelData['destination']}'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.access_time),
+                  title: Text(
+                      'lastupdate :${_formatTimestamp(parcelData['lastupdate'])}'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('parcelholder :${parcelData['parcelholder']}'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('receiverName :${parcelData['receiverName']}'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.phone),
+                  title: Text('receiverPhone :${parcelData['receiverPhone']}'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.location_on),
+                  title: Text('senderName :${parcelData['senderName']}'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.phone),
+                  title: Text('senderPhone :${parcelData['senderPhone']}'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.location_on),
+                  title: Text('weight :${parcelData['weight']}kg'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.location_on),
+                  title: Text('price:${parcelData['price']}'),
+                )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {}
   }
 
   int? historyLength1;
@@ -185,7 +262,9 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                         : const Color.fromARGB(255, 87, 65, 65),
                   ),
                   afterLineStyle: LineStyle(
-                    color: historyLength1! >= 2 ? Colors.orange : Color.fromARGB(255, 87, 65, 65),
+                    color: historyLength1! >= 2
+                        ? Colors.orange
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                   isFirst: true,
                 ),
@@ -199,13 +278,19 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                         iconData:
                             historyLength1! >= 2 ? Icons.check : Icons.close,
                         fontSize: 20),
-                    color: historyLength1! >= 2 ? Colors.orange :  Color.fromARGB(255, 87, 65, 65),
+                    color: historyLength1! >= 2
+                        ? Colors.orange
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                   beforeLineStyle: LineStyle(
-                    color: historyLength1! >= 2? Colors.orange : Color.fromARGB(255, 87, 65, 65),
+                    color: historyLength1! >= 2
+                        ? Colors.orange
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                   afterLineStyle: LineStyle(
-                    color: historyLength1! >= 3? Colors.orange : Color.fromARGB(255, 87, 65, 65),
+                    color: historyLength1! >= 3
+                        ? Colors.orange
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                 ),
                 TimelineTile(
@@ -216,15 +301,21 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                   indicatorStyle: IndicatorStyle(
                     iconStyle: IconStyle(
                         iconData:
-                            historyLength1! >= 3? Icons.check : Icons.close,
+                            historyLength1! >= 3 ? Icons.check : Icons.close,
                         fontSize: 20),
-                    color: historyLength1! >= 3? Colors.orange : Color.fromARGB(255, 87, 65, 65),
+                    color: historyLength1! >= 3
+                        ? Colors.orange
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                   beforeLineStyle: LineStyle(
-                    color: historyLength1! >= 3 ? Colors.orange :  Color.fromARGB(255, 87, 65, 65),
+                    color: historyLength1! >= 3
+                        ? Colors.orange
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                   afterLineStyle: LineStyle(
-                    color: historyLength1! >= 4 ? Colors.orange :  Color.fromARGB(255, 87, 65, 65),
+                    color: historyLength1! >= 4
+                        ? Colors.orange
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                 ),
                 TimelineTile(
@@ -240,15 +331,25 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                         fontSize: 20),
                     color: historyLength1! == 4
                         ? Colors.orange
-                        :  Color.fromARGB(255, 87, 65, 65),
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
                   beforeLineStyle: LineStyle(
                     color: historyLength1! == 4
                         ? Colors.orange
-                        :  Color.fromARGB(255, 87, 65, 65),
+                        : Color.fromARGB(255, 87, 65, 65),
                   ),
-                  
                 ),
+                SizedBox(
+                  height: 100,
+                ),
+                TextButton(
+                    onPressed: () {
+                      Show_parcel_details(context, _traking_num.text.trim());
+                    },
+                    child: const Text(
+                      'More details',
+                      style: TextStyle(color: Colors.blue),
+                    ))
               ] else ...[
                 SizedBox(
                   width: 300,
