@@ -440,7 +440,7 @@ class _HomescreenState extends State<Homescreen> {
                                   }
 
                                   Navigator.of(context).pop();
-                                  updateParcelConfirmation(
+                                  await updateParcelConfirmation(
                                       _confirmok.text.trim());
                                 },
                                 child: const Text(

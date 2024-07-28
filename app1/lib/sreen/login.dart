@@ -76,6 +76,7 @@ class _LogingState extends State<Loging> {
         TextEditingController();
 
     showModalBottomSheet(
+      backgroundColor: Colors.orange,
       context: context,
       builder: (BuildContext context) {
         return Padding(
@@ -151,7 +152,7 @@ class _LogingState extends State<Loging> {
                 }
               },
               child: const Text(
-                'Singin!',
+                'Singin',
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
             )

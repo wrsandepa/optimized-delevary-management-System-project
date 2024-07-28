@@ -135,12 +135,12 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                   title: Text('senderPhone :${parcelData['senderPhone']}'),
                 ),
                 ListTile(
-                  leading: Icon(Icons.location_on),
+                  leading: Icon(Icons.scale),
                   title: Text('weight :${parcelData['weight']}kg'),
                 ),
                 ListTile(
-                  leading: Icon(Icons.location_on),
-                  title: Text('price:${parcelData['price']}'),
+                  leading: Icon(Icons.monetization_on),
+                  title: Text('price:${parcelData['price']}rs'),
                 )
               ],
             ),
