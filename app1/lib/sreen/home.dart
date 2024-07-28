@@ -250,224 +250,120 @@ class _HomescreenState extends State<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Menu'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            icon: const Icon(Icons.account_circle),
-            iconSize: 35,
-          )
-        ],
-        backgroundColor: Colors.orange,
-      ),
-      bottomNavigationBar: const BottomAppBar(
-        height: 60,
-        color: Colors.orange,
-      ),
-      endDrawer: _enddrawer(context), // Set the end drawer here
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              decoration: const BoxDecoration(color: Colors.amberAccent),
-              accountName: Text('$_userN',
-                  style: const TextStyle(
-                      color: Colors.black)), // Replace with actual user name
-              accountEmail: Text('$_email',
-                  style: const TextStyle(
-                      color: Colors.black)), // Replace with actual user email
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: _imageUrl != null
-                    ? ClipOval(
-                        child: Image.network(
-                          _imageUrl!, // Use _imageUrl here
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            print('Error loading image: $error');
-                            print('Stack trace: $stackTrace');
-                            return const Icon(
-                              Icons.error,
-                              size: 50,
-                              color: Colors.red,
-                            );
-                          },
-                        ),
-                      )
-                    : const Text(
-                        "U", // Display the first letter of the user name
-                        style: TextStyle(fontSize: 40.0),
-                      ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {
-                _scaffoldKey.currentState?.openEndDrawer();
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text('Menu'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                _scaffoldKey.currentState?.openDrawer();
               },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                // Handle settings tap
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                // Handle logout tap
-              },
-            ),
+              icon: const Icon(Icons.account_circle),
+              iconSize: 35,
+            )
           ],
+          backgroundColor: Colors.orange,
         ),
-      ),
-      body: Container(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 100, 20, 50),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Trackingmyparcel()),
-                    )
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 255, 191, 0),
-                            Colors.amberAccent
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ), // Setting the background color using decoration
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: const Center(
-                      child: Text(
-                        "TRACKING",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.black),
-                      ),
-                    ),
-                  ),
+        bottomNavigationBar: const BottomAppBar(
+          height: 60,
+          color: Colors.orange,
+        ),
+        endDrawer: _enddrawer(context), // Set the end drawer here
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                decoration: const BoxDecoration(color: Colors.amberAccent),
+                accountName: Text('$_userN',
+                    style: const TextStyle(
+                        color: Colors.black)), // Replace with actual user name
+                accountEmail: Text('$_email',
+                    style: const TextStyle(
+                        color: Colors.black)), // Replace with actual user email
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: _imageUrl != null
+                      ? ClipOval(
+                          child: Image.network(
+                            _imageUrl!, // Use _imageUrl here
+                            width: 100.0,
+                            height: 100.0,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              print('Error loading image: $error');
+                              print('Stack trace: $stackTrace');
+                              return const Icon(
+                                Icons.error,
+                                size: 50,
+                                color: Colors.red,
+                              );
+                            },
+                          ),
+                        )
+                      : const Text(
+                          "U", // Display the first letter of the user name
+                          style: TextStyle(fontSize: 40.0),
+                        ),
                 ),
-                const SizedBox(height: 60),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Profile'),
+                onTap: () {
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () {
+                  // Handle settings tap
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
+                onTap: () {
+                  // Handle logout tap
+                },
+              ),
+            ],
+          ),
+        ),
+        body: Container(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 100, 20, 50),
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Display_curior_ser()));
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 255, 191, 0),
-                            Colors.amberAccent
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ), // Setting the background color using decoration
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: const Center(
-                      child: Text(
-                        "ADD PARCEL",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 50),
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          backgroundColor: Colors.amber,
-                          title: const Text('Tracking number'),
-                          content: TextFormField(
-                            controller: _confirmok,
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () async {
-                                if (_confirmok.text.trim().isEmpty) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    behavior: SnackBarBehavior.floating,
-                                    content: Text(
-                                        'Failed to update parcel confirmation.'),
-                                    duration: Duration(seconds: 5),
-                                    backgroundColor: Colors.red,
-                                  ));
-                                }
-
-                                Navigator.of(context).pop();
-                                updateParcelConfirmation(
-                                    _confirmok.text.trim());
-                              },
-                              child: const Text(
-                                'confirm',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text(
-                                  'Cancel',
-                                  style: TextStyle(color: Colors.red),
-                                )),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 255, 191, 0),
-                            Colors.amberAccent
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ), // Setting the background color using decoration
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: const Center(
-                      child: Center(
+                            builder: (context) => const Trackingmyparcel()),
+                      )
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 100,
+                      decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 255, 191, 0),
+                              Colors.amberAccent
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ), // Setting the background color using decoration
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: const Center(
                         child: Text(
-                          "CONFIRMS",
+                          "TRACKING",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
@@ -476,8 +372,115 @@ class _HomescreenState extends State<Homescreen> {
                       ),
                     ),
                   ),
-                )
-              ],
+                  const SizedBox(height: 60),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const Display_curior_ser()));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 100.0,
+                      decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 255, 191, 0),
+                              Colors.amberAccent
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ), // Setting the background color using decoration
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: const Center(
+                        child: Text(
+                          "ADD PARCEL",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.amber,
+                            title: const Text('Tracking number'),
+                            content: TextFormField(
+                              controller: _confirmok,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () async {
+                                  if (_confirmok.text.trim().isEmpty) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      content: Text(
+                                          'Failed to update parcel confirmation.'),
+                                      duration: Duration(seconds: 5),
+                                      backgroundColor: Colors.red,
+                                    ));
+                                  }
+
+                                  Navigator.of(context).pop();
+                                  updateParcelConfirmation(
+                                      _confirmok.text.trim());
+                                },
+                                child: const Text(
+                                  'confirm',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(color: Colors.red),
+                                  )),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 100.0,
+                      decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 255, 191, 0),
+                              Colors.amberAccent
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ), // Setting the background color using decoration
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: const Center(
+                        child: Center(
+                          child: Text(
+                            "CONFIRMS",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

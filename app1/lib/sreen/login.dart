@@ -141,6 +141,7 @@ class _LogingState extends State<Loging> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
                               }
+                              return null;
                             },
                           ),
                         ),
@@ -164,6 +165,7 @@ class _LogingState extends State<Loging> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your passsword';
                               }
+                              return null;
                             },
                           ),
                         ),
@@ -187,6 +189,7 @@ class _LogingState extends State<Loging> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your username';
                               }
+                              return null;
                             },
                           ),
                         ),
