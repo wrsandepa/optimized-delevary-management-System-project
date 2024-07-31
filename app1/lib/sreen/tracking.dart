@@ -243,7 +243,6 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                     if (_formKey1.currentState!.validate()) {
                       await _fetchhistorylength(parcelId);
                       print(historyLength1);
-                      _traking_num.clear();
                     }
                   },
                   child: const Text("TRACK")),
@@ -344,8 +343,10 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                   height: 100,
                 ),
                 TextButton(
-                    onPressed: () {
-                      Show_parcel_details(context, _traking_num.text.trim());
+                    onPressed: () async {
+                      await Show_parcel_details(
+                          context, _traking_num.text.trim());
+                      _traking_num.clear();
                     },
                     child: const Text(
                       'More details',

@@ -202,7 +202,7 @@ class _LogingState extends State<Loging> {
                                 label: const Text(
                                   'email',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color:  Colors.blueGrey,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
@@ -226,7 +226,7 @@ class _LogingState extends State<Loging> {
                                 label: const Text(
                                   'Password',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.blueGrey,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
@@ -250,7 +250,7 @@ class _LogingState extends State<Loging> {
                                 label: const Text(
                                   'username',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color:Colors.blueGrey,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
