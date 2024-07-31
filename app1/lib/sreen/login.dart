@@ -16,7 +16,6 @@ class _LogingState extends State<Loging> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController username_log = TextEditingController();
-
   final _formkey = GlobalKey<FormState>();
   final forgetpassword_bottom_sheet = GlobalKey<FormState>();
 
@@ -47,7 +46,14 @@ class _LogingState extends State<Loging> {
         }
       }
     } catch (e) {
-      print('$e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Incorrect username or password'),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
     return user;
   }

@@ -30,7 +30,7 @@ class _Display_curior_serState extends State<Display_curior_ser> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Chose your selection!!!!',
+          'Chose your selection',
         ),
         backgroundColor: Colors.orange,
       ),

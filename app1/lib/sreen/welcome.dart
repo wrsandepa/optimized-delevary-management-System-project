@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:app1/sreen/home.dart';
+import 'package:app1/sreen/login.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -31,10 +32,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     Timer(Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => Homescreen(
-                  user1: null,
-                )),
+        MaterialPageRoute(builder: (context) => const Loging()),
       );
     });
   }

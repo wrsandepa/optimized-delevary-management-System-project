@@ -33,6 +33,7 @@ class _HomescreenState extends State<Homescreen> {
   String? _userN; // To store the user username
   String? _email; // To store the email
 
+//pick image function from gallary
   Future<void> _pickImage() async {
     try {
       XFile? pickedFile =
@@ -57,6 +58,7 @@ class _HomescreenState extends State<Homescreen> {
     }
   }
 
+//upload to firebase storage if mobile
   Future<void> _uploadImageMobile(File image) async {
     try {
       Reference storageRef = FirebaseStorage.instance
@@ -92,6 +94,7 @@ class _HomescreenState extends State<Homescreen> {
     }
   }
 
+//upload to firebase storage if web appliocation
   Future<void> _uploadImageWeb(XFile image) async {
     try {
       Reference storageRef = FirebaseStorage.instance
@@ -322,13 +325,6 @@ class _HomescreenState extends State<Homescreen> {
                 title: const Text('Profile'),
                 onTap: () {
                   _scaffoldKey.currentState?.openEndDrawer();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Settings'),
-                onTap: () {
-                  // Handle settings tap
                 },
               ),
               ListTile(

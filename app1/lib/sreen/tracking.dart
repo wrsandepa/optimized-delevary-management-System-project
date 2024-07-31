@@ -243,6 +243,7 @@ class _TrackingmyparcelState extends State<Trackingmyparcel> {
                     if (_formKey1.currentState!.validate()) {
                       await _fetchhistorylength(parcelId);
                       print(historyLength1);
+                      _traking_num.clear();
                     }
                   },
                   child: const Text("TRACK")),
