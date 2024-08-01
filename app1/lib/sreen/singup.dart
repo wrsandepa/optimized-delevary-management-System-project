@@ -54,14 +54,15 @@ class _SingupageState extends State<Singupage> {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-            'Singup',
+            'Signup',
           ),
           backgroundColor: Colors.orange),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage('assets1/annimation/background.jpg'),
-            fit: BoxFit.cover,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.orange.shade200, Colors.orange.shade600],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
         child: Center(
@@ -78,9 +79,9 @@ class _SingupageState extends State<Singupage> {
                             const EdgeInsets.fromLTRB(2.2, 5, 4, 15000 / 100),
                         // color: Colors.red,
                         child: const Text(
-                          'welcome! sing up to continue',
+                          'welcome! sign up to continue',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.blueGrey,
                               fontSize: 20,
                               fontStyle: FontStyle.italic),
                         ),
@@ -96,7 +97,7 @@ class _SingupageState extends State<Singupage> {
                               label: const Text(
                                 'usename',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.blueGrey,
                                 ),
                               ),
                               border: OutlineInputBorder(
@@ -116,7 +117,7 @@ class _SingupageState extends State<Singupage> {
                               label: const Text(
                                 'password',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.blueGrey,
                                 ),
                               ),
                               border: OutlineInputBorder(
@@ -135,7 +136,7 @@ class _SingupageState extends State<Singupage> {
                           decoration: InputDecoration(
                               label: const Text(
                                 'Email',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.blueGrey),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25))),
@@ -180,7 +181,7 @@ class _SingupageState extends State<Singupage> {
                           }
                         },
                         child: const Text(
-                          'singup',
+                          'signup',
                           style:
                               TextStyle(color: Colors.blueGrey, fontSize: 15),
                         ),

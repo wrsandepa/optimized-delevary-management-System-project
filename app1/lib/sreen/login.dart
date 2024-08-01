@@ -19,7 +19,7 @@ class _LogingState extends State<Loging> {
   final _formkey = GlobalKey<FormState>();
   final forgetpassword_bottom_sheet = GlobalKey<FormState>();
 
-  //login fucltion
+  //login function
   Future<User?> Singin() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
@@ -59,7 +59,6 @@ class _LogingState extends State<Loging> {
   }
 
   // Check if the username exists in the userapp collection
-
   Future<String?> isuserexist(User user) async {
     try {
       DocumentReference userDocRef =
@@ -146,9 +145,7 @@ class _LogingState extends State<Loging> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'hello',
-          ),
+          title: const Text('hello'),
           backgroundColor: Colors.orange,
           actions: [
             TextButton(
@@ -158,7 +155,7 @@ class _LogingState extends State<Loging> {
                 }
               },
               child: const Text(
-                'Singin',
+                'Signin',
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
             )
@@ -166,30 +163,28 @@ class _LogingState extends State<Loging> {
         ),
         body: Center(
           child: Padding(
-            padding: EdgeInsets.all(1),
+            padding: const EdgeInsets.all(45),
             child: Form(
               key: _formkey,
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                    image: NetworkImage('assets1/annimation/2147981654.jpg'),
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    colors: [Colors.orange.shade100, Colors.orange.shade600],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          margin: const EdgeInsets.fromLTRB(
-                              1000 / 100, 5 / 100, 4, 18000 / 100),
-                          // color: Colors.red,
+                          margin: const EdgeInsets.fromLTRB(10, 5, 4, 180),
                           child: const Text(
                             'Login your account',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.blueGrey,
                                 fontSize: 20,
                                 fontStyle: FontStyle.italic),
                           ),
@@ -200,15 +195,15 @@ class _LogingState extends State<Loging> {
                             controller: _email,
                             decoration: InputDecoration(
                                 label: const Text(
-                                  'email',
+                                  'Email',
                                   style: TextStyle(
-                                    color:  Colors.blueGrey,
+                                    color: Colors.blueGrey,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25))),
                             obscureText:
-                                false, // This will obscure the text with star marks
+                                false, // This will not obscure the text
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
@@ -231,11 +226,10 @@ class _LogingState extends State<Loging> {
                                 ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25))),
-                            obscureText:
-                                true, // This will obscure the text with star marks
+                            obscureText: true, // This will obscure the text
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your passsword';
+                                return 'Please enter your password';
                               }
                               return null;
                             },
@@ -248,15 +242,15 @@ class _LogingState extends State<Loging> {
                             controller: username_log,
                             decoration: InputDecoration(
                                 label: const Text(
-                                  'username',
+                                  'Username',
                                   style: TextStyle(
-                                    color:Colors.blueGrey,
+                                    color: Colors.blueGrey,
                                   ),
                                 ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25))),
                             obscureText:
-                                true, // This will obscure the text with star marks
+                                false, // This will not obscure the text
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your username';
@@ -275,7 +269,7 @@ class _LogingState extends State<Loging> {
                             );
                           },
                           child: const Text(
-                            'already haven`t account',
+                            'Don\'t have an account?',
                             style:
                                 TextStyle(color: Colors.blueGrey, fontSize: 15),
                           ),
@@ -286,7 +280,7 @@ class _LogingState extends State<Loging> {
                             _showForgotPasswordBottomSheet();
                           },
                           child: const Text(
-                            'forget password',
+                            'Forgot password?',
                             style:
                                 TextStyle(color: Colors.blueGrey, fontSize: 14),
                           ),
