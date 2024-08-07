@@ -516,7 +516,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
           padding: const EdgeInsets.all(30),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.amber,
+              color: Colors.black,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -549,7 +549,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                           width: MediaQuery.of(context).size.width / 2,
                           height: 600,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 207, 200, 134),
                             borderRadius: BorderRadius.circular(10.0),
                             boxShadow: [
                               BoxShadow(
@@ -571,8 +571,10 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                                       Text(
                                         _parcelExists
                                             ? 'Update Status'
-                                            : 'Add Parcel',
-                                        style: const TextStyle(fontSize: 20),
+                                            : 'ADD PARCEL',
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(height: 8),
                                       TextFormField(

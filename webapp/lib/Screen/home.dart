@@ -472,7 +472,7 @@ class _HomepageState extends State<Homepage>
                     TextFormField(
                         controller: _user_name,
                         decoration: const InputDecoration(
-                          labelText: 'Usename',
+                          labelText: 'Username',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
