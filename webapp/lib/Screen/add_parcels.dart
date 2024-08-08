@@ -14,11 +14,9 @@ class ParcelEntryScreen extends StatefulWidget {
 
 class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final _formKey_deleteparcel = GlobalKey<FormState>();
   final formKey_tracking = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   final TextEditingController _trackingNumberController =
       TextEditingController();
   final TextEditingController _destinationController = TextEditingController();
@@ -58,47 +56,64 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
     }
   }
 
+//add and update parcel
   Future<void> _addParcel() async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('parcels')
+        .doc(_trackingNumberController.text.trim())
+        .get();
+    Map<String, dynamic> parcelData1 = doc.data() as Map<String, dynamic>;
     if (_formKey.currentState!.validate()) {
       if (_parcelExists) {
-        try {
-          CollectionReference collectionRef =
-              FirebaseFirestore.instance.collection('parcels');
-          DocumentReference parcelDoc =
-              collectionRef.doc(_trackingNumberController.text.trim());
+        if (parcelData1['parcelholder'] == widget.getusername) {
+          try {
+            CollectionReference collectionRef =
+                FirebaseFirestore.instance.collection('parcels');
+            DocumentReference parcelDoc =
+                collectionRef.doc(_trackingNumberController.text.trim());
 
-          await parcelDoc.update({
-            'history': FieldValue.arrayUnion([
-              {
-                'status': _selectedStatus,
-                // Optionally add a timestamp
-              }
-            ]),
-            'lastupdate': FieldValue.serverTimestamp(),
-          });
+            await parcelDoc.update({
+              'history': FieldValue.arrayUnion([
+                {
+                  'status': _selectedStatus,
+                  // Optionally add a timestamp
+                }
+              ]),
+              'lastupdate': FieldValue.serverTimestamp(),
+            });
 
-          // ignore: use_build_context_synchronously
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text('Parcel updated successfully!'),
+                duration: Duration(seconds: 3),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            _formKey.currentState!.reset();
+            _clearControllers();
+            setState(() {
+              _selectedStatus = null;
+            });
+          } catch (e) {
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text('Error updating parcel: $e'),
+                duration: const Duration(seconds: 3),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text('Parcel updated successfully!'),
+              content: Text('DOES NOT HAVE PERMISSION'),
               duration: Duration(seconds: 3),
-              backgroundColor: Colors.green,
-            ),
-          );
-
-          _formKey.currentState!.reset();
-          _clearControllers();
-          setState(() {
-            _selectedStatus = null;
-          });
-        } catch (e) {
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text('Error updating parcel: $e'),
-              duration: const Duration(seconds: 3),
               backgroundColor: Colors.red,
             ),
           );
@@ -165,6 +180,8 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
     _recPhoneController.clear();
     _senNameController.clear();
     _recNameController.clear();
+    priceController.clear();
+    weightController.clear();
   }
 
   // delete parcel
@@ -180,6 +197,15 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
             FirebaseFirestore.instance.collection('parcels');
         DocumentReference docuref = colleref.doc(tracking);
         await docuref.delete();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('YOUR PARCEL IS DELETED'),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.green,
+          ),
+        );
+        DeleteController.clear();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -189,6 +215,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
             backgroundColor: Colors.red,
           ),
         );
+        DeleteController.clear();
       }
     } catch (e) {
       // ignore: avoid_print
@@ -285,7 +312,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                   onPressed: () {
                     deleteparcel(DeleteController.text.trim());
                     Navigator.of(context).pop();
-                    DeleteController.clear();
+
                     _formKey_deleteparcel.currentState?.reset();
                   },
                 ),
@@ -318,56 +345,43 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SingleChildScrollView(
-              child: AlertDialog(
-                title: Text(
-                    'Your Prarcel Tracking Number is :${trakingcontroller.text.trim()}'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
+            return AlertDialog(
+              title: Text(
+                  'Your Parcel Tracking Number is: ${_trackingNumberController.text.trim()}'),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ListTile(
-                      leading: Icon(Icons.location_on),
-                      title: Text('destination :${parcelData['destination']}'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.access_time),
-                      title: Text(
-                          'lastupdate :${_formatTimestamp(parcelData['lastupdate'])}'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.person),
-                      title:
-                          Text('parcelholder :${parcelData['parcelholder']}'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title:
-                          Text('receiverName :${parcelData['receiverName']}'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.phone),
-                      title:
-                          Text('receiverPhone :${parcelData['receiverPhone']}'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.location_on),
-                      title: Text('senderName :${parcelData['senderName']}'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.phone),
-                      title: Text('senderPhone :${parcelData['senderPhone']}'),
-                    ),
+                    _buildInfoTile(Icons.location_on, 'Destination:',
+                        parcelData['destination']),
+                    _buildInfoTile(Icons.access_time, 'Last Update:',
+                        _formatTimestamp(parcelData['lastupdate'])),
+                    _buildInfoTile(Icons.person, 'Parcel Holder:',
+                        parcelData['parcelholder']),
+                    _buildInfoTile(Icons.account_circle, 'Receiver Name:',
+                        parcelData['receiverName']),
+                    _buildInfoTile(Icons.phone, 'Receiver Phone:',
+                        parcelData['receiverPhone']),
+                    _buildInfoTile(
+                        Icons.person, 'Sender Name:', parcelData['senderName']),
+                    _buildInfoTile(Icons.phone, 'Sender Phone:',
+                        parcelData['senderPhone']),
+                    _buildInfoTile(Icons.inventory, 'Weight:',
+                        '${parcelData['weight']} kg'),
+                    _buildInfoTile(Icons.attach_money, 'Price:',
+                        '${parcelData['price']} rupees'),
                   ],
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
               ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    trakingcontroller.clear();
+                  },
+                  child: const Text('Close'),
+                ),
+              ],
             );
           },
         );
@@ -381,8 +395,127 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
             backgroundColor: Colors.red,
           ),
         );
+        trakingcontroller.clear();
       }
     } catch (e) {}
+  }
+
+  Widget _buildInfoTile(IconData icon, String title, String? value) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text('$title $value'),
+      contentPadding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String labelText) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter a value';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildCard({
+    required String title,
+    required TextEditingController controller,
+    required GlobalKey<FormState> formKey,
+    required String buttonText,
+    required VoidCallback onPressed,
+    required Future<void> Function(String) onChanged,
+  }) {
+    return Card(
+      elevation: 8, // Increase elevation for more pronounced shadow
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0), // Slightly rounded corners
+      ),
+      shadowColor: Colors.black.withOpacity(0.3), // Shadow color with opacity
+      child: Container(
+        width:
+            MediaQuery.of(context).size.width / 2.5, // Adjust width if needed
+        height: 200, // Increase height for better spacing
+        padding:
+            const EdgeInsets.all(15), // Increase padding for better spacing
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey[200]!],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(15.0), // Match border radius
+        ),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 22, // Slightly larger font size
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: controller,
+                decoration: InputDecoration(
+                  labelText: 'Enter Tracking Number',
+                  labelStyle:
+                      const TextStyle(color: Colors.black54), // Label color
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.grey, width: 1),
+                  ),
+                ),
+                onChanged: (value) async {
+                  await onChanged(value); // Call the passed async function
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a tracking number';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: onPressed,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 14.0, horizontal: 24.0), // Text color
+                  elevation: 5, // Add elevation for button shadow
+                  shadowColor:
+                      Colors.white.withOpacity(0.3), // Button shadow color
+                ),
+                child: Text(buttonText, style: const TextStyle(fontSize: 16)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -511,9 +644,9 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
         title: const Text('Tracking Parcels'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(15),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.black,
@@ -541,98 +674,71 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Card(
-                        elevation: 4,
+                        elevation:
+                            8, // Increase elevation for a more pronounced shadow
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(
+                              15.0), // Slightly larger border radius
                         ),
+                        shadowColor: Colors.black
+                            .withOpacity(0.3), // Shadow color with opacity
                         child: Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: 600,
+                          width: MediaQuery.of(context).size.width /
+                              1.8, // Adjust width if needed
+                          height: 600, // Maintain height
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 207, 200, 134),
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 3,
-                                blurRadius: 7,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
+                            gradient: LinearGradient(
+                              colors: [Colors.white, Colors.grey[200]!],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                                15.0), // Match border radius
                           ),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(
+                                  20), // Increase padding for better spacing
                               child: SingleChildScrollView(
                                 child: Form(
                                   key: _formKey,
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         _parcelExists
                                             ? 'Update Status'
-                                            : 'ADD PARCEL',
+                                            : 'Add Parcel',
                                         style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                        ),
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 16),
                                       TextFormField(
+                                        controller: _trackingNumberController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Enter Tracking Number',
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Please Enter Tracking Num';
+                                            return 'Please enter a tracking number';
                                           }
                                           return null;
                                         },
-                                        controller: _trackingNumberController,
-                                        decoration: InputDecoration(
-                                          labelText: 'Enter Tracking Num',
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ),
                                         onChanged: (value) {
                                           _checkParcelExists(
                                               _trackingNumberController.text
                                                   .trim());
                                         },
                                       ),
-                                      const SizedBox(height: 8),
-                                      TextFormField(
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please Enter weight of parcel';
-                                          }
-                                          return null;
-                                        },
-                                        controller: weightController,
-                                        decoration: InputDecoration(
-                                          labelText: 'weight',
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      TextFormField(
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please Enter price';
-                                          }
-                                          return null;
-                                        },
-                                        controller: priceController,
-                                        decoration: InputDecoration(
-                                          labelText: 'price',
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 16),
                                       DropdownButtonFormField<String>(
                                         value: _selectedStatus,
                                         items: _statuses.map((String status) {
@@ -650,7 +756,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                                           labelText: 'Select Status',
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(15),
+                                                BorderRadius.circular(12),
                                           ),
                                         ),
                                         validator: (value) {
@@ -660,112 +766,49 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                                           return null;
                                         },
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 16),
                                       if (!_parcelExists) ...[
-                                        TextFormField(
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Please Enter Sender Phone Num';
-                                            }
-                                            return null;
-                                          },
-                                          controller: _senPhoneController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Enter Sender Phone Num',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        TextFormField(
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Please Enter Sender Name';
-                                            }
-                                            return null;
-                                          },
-                                          controller: _senNameController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Enter Sender Name',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        TextFormField(
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Please Enter Receiver Phone Num';
-                                            }
-                                            return null;
-                                          },
-                                          controller: _recPhoneController,
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                'Enter Receiver Phone Num',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        TextFormField(
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Please Enter Receiver Name';
-                                            }
-                                            return null;
-                                          },
-                                          controller: _recNameController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Enter Receiver Name',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        TextFormField(
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Please Enter Destination';
-                                            }
-                                            return null;
-                                          },
-                                          controller: _destinationController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Enter Destination',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
+                                        _buildTextField(_senPhoneController,
+                                            'Enter Sender Phone Num'),
+                                        const SizedBox(height: 16),
+                                        _buildTextField(_senNameController,
+                                            'Enter Sender Name'),
+                                        const SizedBox(height: 16),
+                                        _buildTextField(_recPhoneController,
+                                            'Enter Receiver Phone Num'),
+                                        const SizedBox(height: 16),
+                                        _buildTextField(_recNameController,
+                                            'Enter Receiver Name'),
+                                        const SizedBox(height: 16),
+                                        _buildTextField(_destinationController,
+                                            'Enter Destination'),
+                                        const SizedBox(height: 16),
+                                        _buildTextField(
+                                            weightController, 'Weight'),
+                                        const SizedBox(height: 16),
+                                        _buildTextField(
+                                            priceController, 'Price'),
                                       ],
                                       Padding(
-                                        padding: const EdgeInsets.all(20),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
                                         child: ElevatedButton(
                                           onPressed: _addParcel,
                                           style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            backgroundColor: Colors.blue,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(10.0),
+                                                  BorderRadius.circular(12.0),
                                             ),
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 16.0,
-                                                horizontal: 24.0),
+                                                vertical: 14.0,
+                                                horizontal: 24.0), // Text color
+                                            elevation:
+                                                5, // Add elevation for button shadow
+                                            shadowColor: Colors.black
+                                                .withOpacity(
+                                                    0.3), // Button shadow color
                                           ),
                                           child: const Text(
                                             'Submit',
@@ -783,200 +826,54 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
                       ),
                       Column(
                         children: [
-                          Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 3.5,
-                              height: 200,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 3,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: SingleChildScrollView(
-                                    child: Form(
-                                      key: _formKey_deleteparcel,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Text(
-                                            'Delete Parcel',
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          TextFormField(
-                                            controller: DeleteController,
-                                            decoration: InputDecoration(
-                                              labelText:
-                                                  'Enter Tracking Number',
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                            ),
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'Please enter a tracking number';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                          const SizedBox(height: 16),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              await _showConfirmDialog(context,
-                                                  DeleteController.text);
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 16.0,
-                                                      horizontal: 24.0),
-                                            ),
-                                            child: const Text(
-                                              'Delete Parcel',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          _buildCard(
+                            title: 'Delete Parcel',
+                            controller: DeleteController,
+                            formKey: _formKey_deleteparcel,
+                            buttonText: 'Delete Parcel',
+                            onChanged: (value) async {
+                              // Call _checkParcelExists asynchronously
+                              await _checkParcelExists(value.trim());
+                            },
+                            onPressed: () async {
+                              await _showConfirmDialog(
+                                  context, DeleteController.text);
+                            },
                           ),
                           const SizedBox(height: 16),
-                          Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 3.5,
-                              height: 200,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 3,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
+                          _buildCard(
+                            title: 'Tracking Parcel',
+                            controller: trakingcontroller,
+                            formKey: formKey_tracking,
+                            buttonText: 'Track Parcel',
+                            onChanged: (value) async {
+                              // Call _checkParcelExists asynchronously
+                              await _checkParcelExists(value.trim());
+                            },
+                            onPressed: () async {
+                              if (formKey_tracking.currentState!.validate() &&
+                                  _parcelExists) {
+                                _scaffoldKey.currentState!.openDrawer();
+                                await _fetchhistorylength(
+                                    trakingcontroller.text.trim());
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    content:
+                                        Text('YOUR PARCEL DOES NOT FOUND!'),
+                                    duration: Duration(seconds: 3),
+                                    backgroundColor: Colors.red,
                                   ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: Form(
-                                    key: formKey_tracking,
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          const Text(
-                                            'Tracking Parcel',
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          TextFormField(
-                                            onChanged: (value) {
-                                              _checkParcelExists(
-                                                  trakingcontroller.text
-                                                      .trim());
-                                            },
-                                            controller: trakingcontroller,
-                                            decoration: InputDecoration(
-                                              labelText:
-                                                  'Enter Tracking Number',
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                            ),
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'Please enter a tracking number';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                          const SizedBox(height: 16),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              if (formKey_tracking.currentState!
-                                                      .validate() &&
-                                                  _parcelExists) {
-                                                _scaffoldKey.currentState!
-                                                    .openDrawer();
-                                                _fetchhistorylength(
-                                                    trakingcontroller.text
-                                                        .trim());
-                                              } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  const SnackBar(
-                                                    behavior: SnackBarBehavior
-                                                        .floating,
-                                                    content: Text(
-                                                        'YOUR PARCEL DOES NOT FOUND !'),
-                                                    duration: Duration(
-                                                        seconds:
-                                                            3), // Adjust the duration as needed
-                                                    backgroundColor: Colors.red,
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 16.0,
-                                                      horizontal: 24.0),
-                                            ),
-                                            child: const Text(
-                                              'Track Parcel',
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                                );
+                              }
+                            },
                           ),
                         ],
-                      ),
+                      )
                     ],
                   ),
-                ),
+                )
               ],
             ),
           ),
