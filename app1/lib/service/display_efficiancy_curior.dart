@@ -336,16 +336,6 @@ class _Display_curior_serState extends State<Display_curior_ser> {
                 ],
               ),
             ),
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: SizedBox(
-                height: 100,
-                width: 100,
-                child:
-                    LottieBuilder.asset('assets1/annimation/openwindow.json'),
-              ),
-            ),
           ],
         ),
       ),
