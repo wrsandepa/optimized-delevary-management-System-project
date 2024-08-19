@@ -58,13 +58,13 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
 
 //add and update parcel
   Future<void> _addParcel() async {
-    DocumentSnapshot doc = await FirebaseFirestore.instance
-        .collection('parcels')
-        .doc(_trackingNumberController.text.trim())
-        .get();
-    Map<String, dynamic> parcelData1 = doc.data() as Map<String, dynamic>;
     if (_formKey.currentState!.validate()) {
       if (_parcelExists) {
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('parcels')
+            .doc(_trackingNumberController.text.trim())
+            .get();
+        Map<String, dynamic> parcelData1 = doc.data() as Map<String, dynamic>;
         if (parcelData1['parcelholder'] == widget.getusername) {
           try {
             CollectionReference collectionRef =
