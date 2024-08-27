@@ -99,7 +99,7 @@ class _HomepageState extends State<Homepage>
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text('Successfully signed in'),
+              content: Text('Successfully Signed In'),
               duration: Duration(seconds: 3),
               backgroundColor: Colors.green,
             ),
@@ -109,7 +109,7 @@ class _HomepageState extends State<Homepage>
             const SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text(
-                  'Username does not match.Please check your credentials.'),
+                  'Username Does Not Match.Please Check Your Credentials.'),
               duration: Duration(seconds: 3),
               backgroundColor: Colors.red,
             ),
@@ -123,7 +123,7 @@ class _HomepageState extends State<Homepage>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           behavior: SnackBarBehavior.floating,
-          content: Text('Sign-in failed. Please try again.'),
+          content: Text('Sign-In Failed. Please Try Again.'),
           duration: Duration(seconds: 3),
           backgroundColor: Colors.red,
         ),
@@ -220,7 +220,7 @@ class _HomepageState extends State<Homepage>
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return 'Please Enter Your Email';
                       }
                       return null;
                     },
@@ -234,7 +234,7 @@ class _HomepageState extends State<Homepage>
                   TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return 'Please Enter Your Password';
                       }
                       return null;
                     },
