@@ -86,7 +86,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 behavior: SnackBarBehavior.floating,
-                content: Text('Parcel updated successfully!'),
+                content: Text('Parcel Updated Successfully!'),
                 duration: Duration(seconds: 3),
                 backgroundColor: Colors.green,
               ),
@@ -102,7 +102,7 @@ class _ParcelEntryScreenState extends State<ParcelEntryScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 behavior: SnackBarBehavior.floating,
-                content: Text('Error updating parcel: $e'),
+                content: Text('Error Updating Parcel: $e'),
                 duration: const Duration(seconds: 3),
                 backgroundColor: Colors.red,
               ),
