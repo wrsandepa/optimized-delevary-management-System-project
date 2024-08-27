@@ -109,7 +109,7 @@ class _HomepageState extends State<Homepage>
             const SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text(
-                  'Username does not match. Please check your credentials.'),
+                  'Username does not match.Please check your credentials.'),
               duration: Duration(seconds: 3),
               backgroundColor: Colors.red,
             ),
